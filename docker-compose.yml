@@ -1,0 +1,6 @@
+version: '2'
+services:
+  rcgech:
+    build: .
+    ports:
+      - "0.0.0.0:8090:8090"

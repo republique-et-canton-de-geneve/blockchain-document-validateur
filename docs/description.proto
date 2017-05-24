@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package rcgech;
+
+message FID {
+    uint64 first = 1;
+    uint64 second = 2;
+    uint64 third = 3;
+    uint32 langcode = 4;
+}
+
+message Excerpt {
+    bytes data = 1;
+}
+
+service RegisterProxy {
+    rpc GetExcerpt(FID) returns (Excerpt) {}
+}
