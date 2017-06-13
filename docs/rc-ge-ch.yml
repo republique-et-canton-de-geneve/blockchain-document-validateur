@@ -1,0 +1,63 @@
+swagger: '2.0'
+info:
+    title: RCG horodatage
+    description: |
+        RCG horodatage est un service qui permet l'obtention d'un certificat
+        il s'occupe de récupérer un certificat, le signer et horodater la
+        signature.
+    version: "0.1.0"
+produces:
+    - application/json
+consumes:
+    - application/json
+paths:
+    /horodatage:
+        post:
+            summary: Signe et horodate un extrait
+            operationId: horodate
+            description: |
+                Télécharge un extrait depuis le site du registre du
+                commerce, le signe puis l'horodate
+            responses:
+                200:
+                    description: |
+                        Retourne les informations relatives à la signature et l'horodatage
+                    schema:
+                        $ref: '#/definitions/Receipt'
+                default:
+                    description: Internal error
+                    schema:
+                        $ref: '#/definitions/Error'
+definitions:
+    Receipt:
+        type: object
+        properties:
+            first:
+                type: integer
+            second:
+                type: integer
+            third:
+                type: integer
+            name:
+                type: string
+            mail:
+                type: string
+        required:
+            - first
+            - second
+            - third
+            - name
+            - mail
+    Error:
+        type: object
+        properties:
+            code:
+                type: integer
+                format: int32
+            message:
+                type: string
+            fields:
+                type: string
+        required:
+            - code
+            - message

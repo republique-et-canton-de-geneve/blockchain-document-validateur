@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	rcgech "github.com/Magicking/rc-ge-ch-pdf/internal"
+	rcgech "github.com/Magicking/rc-ge-ch-pdf/internal/extract-services"
 	"google.golang.org/grpc"
 	//	"google.golang.org/grpc/grpclog"
 )
