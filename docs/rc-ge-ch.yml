@@ -2,52 +2,131 @@ swagger: '2.0'
 info:
     title: RCG horodatage
     description: |
-        RCG horodatage est un service qui permet l'obtention d'un certificat
-        il s'occupe de récupérer un certificat, le signer et horodater la
-        signature.
+        RCG horodatage est un service qui permet l'horodatage numérique via
+        sur la blockchain Ethereum.
+        Le principe est d'envoyer des fichiers qui sont ensuite passer dans
+        une fonction hachage SHA3-256. Les « hash » sont ensuite intégrés
+        dans un arbre de Merkle dont la racine est inséré dans une
+        transaction blockchain, l'(es) adresse(s) signant la transaction
+        identifie le Registre du Commerce, c'est une information qui doit
+        être publique.
     version: "0.1.0"
 produces:
     - application/json
 consumes:
     - application/json
 paths:
-    /horodatage:
-        post:
-            summary: Signe et horodate un extrait
-            operationId: horodate
+    /recu:
+        get:
+            summary: Retourne le fichier avec le reçu
+            operationId: getreceipt
             description: |
-                Télécharge un extrait depuis le site du registre du
-                commerce, le signe puis l'horodate
+                Retourne le fichier avec le reçu associé au hash fourni
+            produces:
+                - application/octet-stream
+                - application/json
+            parameters:
+              - name: hash
+                in: query
+                type: string
+                required: true
+                description: Le hash identifiant un fichio
             responses:
                 200:
                     description: |
-                        Retourne les informations relatives à la signature et l'horodatage
+                        Fichier de reçu de l'horodatage certifié blockchain
                     schema:
-                        $ref: '#/definitions/Receipt'
+                        type: file
                 default:
                     description: Internal error
                     schema:
                         $ref: '#/definitions/Error'
+#TODO put in an other services
+#        post:
+#            summary: Vérifie le reçu
+#           operationId: validatereceipt
+#           description: |
+#               Vérifie le reçu et le fichier associé
+#           consumes:
+#               - application/octet-stream
+#               - application/json
+#           parameters:
+#             - name: hash
+#               in: query
+#               type: string
+#               required: true
+#               description: Le hash associé au fichier soumi
+#           responses:
+#               200:
+#                   description: |
+#                       Fichier(s) de reçu de l'horodatage certifié blockchain
+#                   schema:
+#                       type: file
+#               default:
+#                   description: Internal error
+#                   schema:
+#                       $ref: '#/definitions/Error'
+    /horodatage:
+        get:
+            summary: Liste les fichiers horodatés
+            operationId: listtimestamped
+            description: |
+                Liste les fichiers horodatés
+            responses:
+                200:
+                    description: |
+                        Liste des fichiers qui ont été horodaté
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/TodoFile'
+                default:
+                    description: Internal error
+                    schema:
+                        $ref: '#/definitions/Error'
+# Todo put it manually
+#       post:
+#           summary: Signe et horodate les fichiers
+#           operationId: signandtimestamp
+#           description: |
+#               Signe et horodate les fichiers
+#           parameters:
+#             - name: agent_name
+#               in: query
+#               type: string
+#               required: true
+#               description: Le nom de l'agent signant les fichiers
+#             - name: action_files
+#               in: body
+#               schema:
+#                 type: array
+#                 items:
+#                   $ref: '#/definitions/TodoFile'
+#               required: true
+#               description: Liste des fichiers à signer et horodater
+#           responses:
+#               200:
+#                   description: |
+#                       Liste des fichiers en attente de signature et horodatage
+#                   schema:
+#                       $ref: '#/definitions/TodoFile'
+#               default:
+#                   description: Internal error
+#                   schema:
+#                       $ref: '#/definitions/Error'
 definitions:
-    Receipt:
+    TodoFile:
         type: object
         properties:
-            first:
-                type: integer
-            second:
-                type: integer
-            third:
-                type: integer
-            name:
+            hash:
                 type: string
-            mail:
+            filename:
                 type: string
+            available:
+                type: boolean
         required:
-            - first
-            - second
-            - third
-            - name
-            - mail
+            - hash
+            - filename
     Error:
         type: object
         properties:
