@@ -13,9 +13,10 @@ import (
 
 type Receipt struct {
 	gorm.Model
-	TargetHash string
-	Filename   string
-	JSONData   []byte
+	TargetHash      string
+	TransactionHash string
+	Filename        string
+	JSONData        []byte
 }
 
 func InsertReceipt(ctx context.Context, filename string, rcpt *Chainpoint) error {
@@ -24,10 +25,16 @@ func InsertReceipt(ctx context.Context, filename string, rcpt *Chainpoint) error
 		return err
 	}
 
+	var tx_hash string
+
+	if len(rcpt.Anchors) > 0 {
+		tx_hash = rcpt.Anchors[0].SourceID
+	}
 	_rcpt := Receipt{
-		TargetHash: rcpt.TargetHash,
-		JSONData:   jsonData,
-		Filename:   filename,
+		TargetHash:      rcpt.TargetHash,
+		JSONData:        jsonData,
+		TransactionHash: tx_hash,
+		Filename:        filename,
 	}
 
 	db, ok := DBFromContext(ctx)

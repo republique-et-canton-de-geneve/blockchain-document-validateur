@@ -41,10 +41,10 @@ func configureAPI(api *operations.RCGHorodatageAPI) http.Handler {
 	api.BinProducer = runtime.ByteStreamProducer()
 
 	api.GetreceiptHandler = operations.GetreceiptHandlerFunc(func(params operations.GetreceiptParams) middleware.Responder {
-		return middleware.NotImplemented("operation .Getreceipt has not yet been implemented")
+		return internal.GetreceiptHandler(ctx, params)
 	})
 	api.ListtimestampedHandler = operations.ListtimestampedHandlerFunc(func(params operations.ListtimestampedParams) middleware.Responder {
-		return middleware.NotImplemented("operation .Listtimestamped has not yet been implemented")
+		return internal.ListtimestampedHandler(ctx, params)
 	})
 
 	api.ServerShutdown = func() {}
@@ -73,5 +73,5 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics
 func setupGlobalMiddleware(ctx context.Context, handler http.Handler) http.Handler {
-	return internal.UploadHandler(ctx, "/upload", handler)
+	return internal.ValidateHandler(ctx, "/validate", internal.UploadHandler(ctx, "/upload", handler))
 }
