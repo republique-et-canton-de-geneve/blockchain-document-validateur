@@ -22,7 +22,7 @@ func sendData(data []byte) (string, error) {
 	if err != nil {
 		log.Fatalf("blktk.newblockchaincontext: %v", err)
 	}
-	anchor := ethtk.NewAnchor(&blkCtx.AO.Address, blkCtx.NC) // Key leaking via Signer
+	anchor := ethtk.NewAnchor(&blkCtx.AO.Address, blkCtx.NC)
 	tx, err := anchor.PrepareData(blkCtx.AO.Transactor, data)
 	if err != nil {
 		return "", fmt.Errorf("ethtk.NewAnchor: %v", err)
