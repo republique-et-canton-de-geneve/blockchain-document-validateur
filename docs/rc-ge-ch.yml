@@ -30,7 +30,7 @@ paths:
                 in: query
                 type: string
                 required: true
-                description: Le hash identifiant un fichio
+                description: Le hash identifiant un fichier
             responses:
                 200:
                     description: |
@@ -79,7 +79,7 @@ paths:
                     schema:
                         type: array
                         items:
-                            $ref: '#/definitions/TodoFile'
+                            $ref: '#/definitions/ReceiptFile'
                 default:
                     description: Internal error
                     schema:
@@ -101,7 +101,7 @@ paths:
 #               schema:
 #                 type: array
 #                 items:
-#                   $ref: '#/definitions/TodoFile'
+#                   $ref: '#/definitions/ReceiptFile'
 #               required: true
 #               description: Liste des fichiers à signer et horodater
 #           responses:
@@ -109,24 +109,23 @@ paths:
 #                   description: |
 #                       Liste des fichiers en attente de signature et horodatage
 #                   schema:
-#                       $ref: '#/definitions/TodoFile'
+#                       $ref: '#/definitions/ReceiptFile'
 #               default:
 #                   description: Internal error
 #                   schema:
 #                       $ref: '#/definitions/Error'
 definitions:
-    TodoFile:
+    ReceiptFile:
         type: object
         properties:
             hash:
                 type: string
             filename:
                 type: string
-            available:
-                type: boolean
-        required:
-            - hash
-            - filename
+            transactionhash:
+                type: string
+            horodatingaddress:
+                type: string
     Error:
         type: object
         properties:
