@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"log"
-	"mime/multipart"
-	"net/textproto"
+	"net/http"
 
 	models "github.com/Magicking/rc-ge-ch-pdf/models"
 	op "github.com/Magicking/rc-ge-ch-pdf/restapi/operations"
@@ -14,12 +14,13 @@ import (
 	middleware "github.com/go-openapi/runtime/middleware"
 )
 
-type nopCloser struct {
-	*bytes.Reader
+func newOctetStream(r io.Reader, fn string) middleware.Responder {
+	return middleware.ResponderFunc(func(w http.ResponseWriter, _ runtime.Producer) {
+		w.Header().Set("Content-Type", "application/octet-stream")
+		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%q", fn))
+		io.Copy(w, r)
+	})
 }
-
-func (nopCloser) Close() error { return nil }
-
 func GetreceiptHandler(ctx context.Context, params op.GetreceiptParams) middleware.Responder {
 	rcpt, ok, err := GetReceiptByHash(ctx, params.Hash)
 	if err != nil {
@@ -32,12 +33,9 @@ func GetreceiptHandler(ctx context.Context, params op.GetreceiptParams) middlewa
 		log.Printf(err_str)
 		return op.NewGetreceiptDefault(500).WithPayload(&models.Error{Message: &err_str})
 	}
-	mimeHdr := textproto.MIMEHeader{"Content-Type": {"application/json"}}
 	reader := bytes.NewReader(rcpt.JSONData)
-	buf := nopCloser{reader}
 	filename := fmt.Sprintf("%s.json", rcpt.Filename)
-	fh := multipart.FileHeader{Filename: filename, Header: mimeHdr}
-	return op.NewGetreceiptOK().WithPayload(runtime.File{Data: buf, Header: &fh})
+	return newOctetStream(reader, filename)
 }
 
 func ListtimestampedHandler(ctx context.Context, params op.ListtimestampedParams) middleware.Responder {
