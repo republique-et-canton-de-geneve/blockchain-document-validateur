@@ -4,3 +4,11 @@ services:
     build: .
     ports:
       - "0.0.0.0:8090:8090"
+  caddy-rev:
+    image: abiosoft/caddy
+    ports:
+      - "0.0.0.0:8001:80"
+      - "0.0.0.0:8443:443"
+    volumes:
+      - "./Caddyfile:/etc/Caddyfile:ro"
+      - "./mockup:/var/www:ro"
