@@ -15,7 +15,7 @@ import (
 )
 
 const pkey = "18030537dbdd38d0764947d40bed98fc4d2a21af82765a7de7b13d2e4076773c"
-const gethUrl = "http://localhost:8545/"
+const gethUrl = "http://1.1.3.7:8545/"
 
 func sendData(data []byte) (string, error) {
 	blkCtx, err := blktk.NewBlockchainContext(gethUrl, pkey)

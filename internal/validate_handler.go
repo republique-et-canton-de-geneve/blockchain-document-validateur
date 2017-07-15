@@ -7,61 +7,114 @@ import (
 	"fmt"
 	blktk "github.com/Magicking/gethitihteg"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"golang.org/x/crypto/sha3"
 	"io"
 	"log"
+	"math/big"
 	"net/http"
 	"strings"
 )
 
-func getData(hash common.Hash) ([]byte, error) {
-	blkNC, err := blktk.NewNodeConnector(gethUrl, 3)
-	if err != nil {
-		log.Fatalf("blktk.newblockchaincontext: %v\n", err)
+func isProtectedV(V *big.Int) bool {
+	if V.BitLen() <= 8 {
+		v := V.Uint64()
+		return v != 27 && v != 28
 	}
-	tx, isPending, err := blkNC.GetTransaction(context.TODO(), hash)
-	if err != nil {
-		return nil, fmt.Errorf("blkNC.GetTransaction: %v\n", err)
-	}
-	if isPending {
-		log.Println("Pending transaction")
-	}
-	return tx.Data(), nil
+	// anything not 27 or 28 are considered unprotected
+	return true
 }
 
-func validateReceipt(receipt *Chainpoint, hash common.Hash) error {
+// deriveChainId derives the chain id from the given v parameter
+func deriveChainId(v *big.Int) *big.Int {
+	if v.BitLen() <= 64 {
+		v := v.Uint64()
+		if v == 27 || v == 28 {
+			return new(big.Int)
+		}
+		return new(big.Int).SetUint64((v - 35) / 2)
+	}
+	v = new(big.Int).Sub(v, big.NewInt(35))
+	return v.Div(v, big.NewInt(2))
+}
+
+func deriveSigner(V *big.Int) types.Signer {
+	if V.Sign() != 0 && isProtectedV(V) {
+		return types.NewEIP155Signer(deriveChainId(V))
+	} else {
+		return types.HomesteadSigner{}
+	}
+}
+
+func getData(hash common.Hash) ([]byte, *big.Int, string, error) {
+	blkNC, err := blktk.Dial(gethUrl)
+	if err != nil {
+		log.Fatalf("blktk.Dial: %v\n", err)
+	}
+	tx, hdr_hash, err := blkNC.TransactionByHashFull(context.TODO(), hash)
+	if err != nil {
+		return nil, nil, "", fmt.Errorf("blkNC.TransactionByHashFull: %v\n", err)
+	}
+	if hdr_hash == nil {
+		return nil, nil, "", fmt.Errorf("Transaction pending")
+	}
+	hdr, err := blkNC.HeaderByHash(context.TODO(), *hdr_hash)
+	if err != nil {
+		return nil, nil, "", fmt.Errorf("blkNC.TransactionByHashFull: %v\n", err)
+	}
+	v, _, _ := tx.RawSignatureValues()
+	var from string
+	if v != nil {
+		// make a best guess about the signer and use that to derive
+		// the sender.
+		signer := deriveSigner(v)
+		if f, err := types.Sender(signer, tx); err != nil { // derive but don't cache
+			from = "[invalid sender: invalid sig]"
+		} else {
+			from = fmt.Sprintf("%x", f[:])
+		}
+	} else {
+		from = "[invalid sender: nil V field]"
+	}
+	return tx.Data(), hdr.Time, from, nil
+}
+
+func validateReceipt(receipt *Chainpoint, hash common.Hash) (*big.Int, string, error) {
 	if !receipt.MerkleVerify() {
-		return fmt.Errorf("Invalid receipt")
+		return nil, "", fmt.Errorf("Invalid receipt")
 	}
 	targetHash := common.Hex2Bytes(receipt.TargetHash)
 
 	if !bytes.Equal(targetHash, hash.Bytes()) {
-		return fmt.Errorf("The hash in the receipt mismatch the file hash: %s != %s", common.Bytes2Hex(targetHash), common.Bytes2Hex(hash.Bytes()))
+		return nil, "", fmt.Errorf("The hash in the receipt mismatch the file hash: %s != %s", common.Bytes2Hex(targetHash), common.Bytes2Hex(hash.Bytes()))
 	}
 
 	root := common.Hex2Bytes(receipt.MerkleRoot)
 
-	var ok bool
 	for _, v := range receipt.Anchors {
 		if v.Type == "ETHData" {
 			sourceId := common.HexToHash(v.SourceID)
-			data, err := getData(sourceId)
+			data, anchor_date, from, err := getData(sourceId)
+			log.Printf("anchor_date: %v, from: %v", anchor_date, from)
 			if err != nil {
-				return fmt.Errorf("The transaction inexistent: %v\nTx hash: %s\n", err, v.SourceID)
+				return nil, "", fmt.Errorf("The transaction inexistent: %v\nTx hash: %s\n", err, v.SourceID)
 			}
 			if !bytes.Equal(data, root) {
-				return fmt.Errorf("The receipt does not validate")
+				return nil, "", fmt.Errorf("The receipt does not validate")
 			}
-			ok = true // IF ANY VALIDATE
+			// IF ANY VALIDATE
+			return anchor_date, from, nil
 		} else {
 			log.Println("An unknown anchor type could be validated: ", v.Type)
 		}
 	}
+	return nil, "", fmt.Errorf("No anchor could be validated")
+}
 
-	if !ok {
-		log.Println("No anchor could be validated")
-	}
-	return nil
+type ValidateResponse struct {
+	TargetHash string   `json:"target_hash"`
+	From       string   `json:"from"`
+	Time       *big.Int `json:"time"`
 }
 
 func ValidateHandler(ctx context.Context, prefix string, handler http.Handler) http.Handler {
@@ -101,25 +154,40 @@ func ValidateHandler(ctx context.Context, prefix string, handler http.Handler) h
 			if !receipt_found {
 				dec := json.NewDecoder(file)
 				err = dec.Decode(&receipt)
-			}
-			if err == nil {
-				receipt_found = true
-				continue
+				if err == nil {
+					receipt_found = true
+					continue
+				}
 			}
 			h := sha3.New256()
+			if _, err = file.Seek(0, 0); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 			if _, err = io.Copy(h, file); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 			hash = h.Sum(nil)
 		}
-		log.Println(receipt)
 		if !receipt_found {
 			http.Error(w, fmt.Sprintf("Invalid number of file, should be FILE + FILE RECEIPT"), http.StatusInternalServerError)
 			return
 		}
-		if err = validateReceipt(&receipt, common.BytesToHash(hash)); err != nil {
+		anchor_date, from, err := validateReceipt(&receipt, common.BytesToHash(hash))
+		if err != nil {
 			http.Error(w, fmt.Sprintf("Could not validate Receipt: %v", err), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		enc := json.NewEncoder(w)
+		err = enc.Encode(&ValidateResponse{
+			TargetHash: common.Bytes2Hex(hash),
+			From:       from,
+			Time:       anchor_date,
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}
