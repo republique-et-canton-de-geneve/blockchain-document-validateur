@@ -1,0 +1,25 @@
+/*
+ * ==========================================================
+ * Grid
+ * ==========================================================
+ */
+.panels-dnd .panel-region {
+  display: inline;
+  float: left;
+  position: relative;
+  margin-left: 1%;
+}
+.panels-dnd .row {
+  clear: both;
+}
+.panels-dnd #panel-region-top {width: 98.0%;}
+.panels-dnd #panel-region-bottom {width: 98.0%;}
+
+#panel-region-left1,
+#panel-region-right1,
+#panel-region-left2,
+#panel-region-right2,
+#panel-region-left3,
+#panel-region-right3 {
+  width: 48%;
+}

@@ -1,0 +1,20 @@
+.panels-dnd .panel-region {
+  display: inline;
+  float: left;
+  position: relative;
+  margin-left: 1%;
+}
+.panels-dnd .row {
+  clear: both;
+}
+.panels-dnd #panel-region-block1 {width: 98.0%;}
+.panels-dnd #panel-region-block6 {width: 98.0%;}
+
+#panel-region-block2,
+#panel-region-block4 {
+  width: 65%;
+}
+#panel-region-block3,
+#panel-region-block5 {
+  width: 32%;
+}
