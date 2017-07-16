@@ -78,6 +78,9 @@ func UploadHandler(ctx context.Context, prefix string, handler http.Handler) htt
 			if _, err := io.Copy(dst, file); err != nil {
 			}*/
 		}
+		if len(files) == 1 {
+			hashs = append(hashs, hashs[0])
+		}
 		receipts, merkleRoot := NewChainpoints(hashs)
 		//send merkleroot
 		txhash, err := sendData(merkleRoot)
@@ -86,6 +89,9 @@ func UploadHandler(ctx context.Context, prefix string, handler http.Handler) htt
 			return
 		}
 		for i, v := range receipts {
+			if len(files) == 1 && i > 0 {
+				break
+			}
 			//fill receipt
 			v.Anchors = []AnchorPoint{AnchorPoint{SourceID: txhash, Type: "ETHData"}}
 			InsertReceipt(ctx, files[i].Filename, &v)
