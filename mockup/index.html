@@ -39,7 +39,7 @@
 	<!-- TITRE et DESCRIPTION -->	
 	<meta itemprop="description" content="Charte 2016 template AEL Commun" />
 	<meta name="description" content="Charte 2016 template AEL Commun" />
-	<title>Charte 2016 - AEL - République et canton de Genève</title>
+	<title>Horodateur | République et canton de Genève/title>
 	
 	<!-- STYLES -->
 	<style>
@@ -47,6 +47,7 @@
 		@import url("charte_2016/css/owl.carousel.css?ody61c");
 		@import url("charte_2016/css/font-awesome.min.css?ody61c");
 		@import url("include/css/system.base.css?ody61c");
+		@import url("css/dropzone.css?ody61c");
 	</style>
 	<!-- HTML5 element support for IE6-8 -->
 	<!--[if lt IE 9]>
@@ -72,6 +73,7 @@
 	<script src="charte_2016/js/datepicker-fr.js?ody61c"></script>
 	<script src="charte_2016/js/jquery.cookie.js?ody61c"></script>
 	<script src="js/angular.min.js?ody61c"></script>
+	<script src="js/dropzone.js?ody61g"></script>
 	<script src="js/rcge.js?ody61c"></script>
 
 <!--[if gte mso 9]><xml>
@@ -165,13 +167,15 @@
 									<section id="block-system-main" class="block block-system clearfix">
 										<div class="panel-main">
     <div ng-controller="extract" ng-app="rc">
-<form  action="api/upload" method="post" enctype="multipart/form-data">
-          <fieldset>
-            <legend>Séléctionnez les éléments à horodater</legend>
-            <input type="file" name="myfiles" id="myfiles" multiple="multiple">
-            <button type="submit" id="submit" class="btn btn-primary">Horodatage</button>
-          </fieldset>
-</form>
+         <div class="nest" id="DropZoneClose">
+            <div class="body-nest" id="DropZone">
+               <div id="uploadextraitzone" class="dropzone"></div>
+                   <div id="infobox" class="alert alert-info">Veuillez téléverser les fichiers extraits</div>
+               <button style="margin-top: 10px;" class="btn btn-primary" id="submit-all" onclick="processValidate()" >
+                   Horodater
+               </button>
+            </div>
+         </div>
       <div class="col-md-11 col-md-offset-1">
         <table class="table">
           <thead>
