@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/jinzhu/gorm"
-	//	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"context"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type Receipt struct {
@@ -81,7 +81,19 @@ func GetAllReceipts(ctx context.Context) ([]Receipt, error) {
 }
 
 func InitDatabase(dbDsn string) (*gorm.DB, error) {
-	db, err := gorm.Open("sqlite3", dbDsn)
+	var err error
+	var db *gorm.DB
+
+	for i := 1; i < 10; i++ {
+		db, err = gorm.Open("postgres", dbDsn)
+		if err == nil || i == 10 {
+			break
+		}
+		sleep := (2 << uint(i)) * time.Second
+		log.Printf("Could not connect to DB: %v", err)
+		log.Printf("Waiting %v before retry", sleep)
+		time.Sleep(sleep)
+	}
 	if err != nil {
 		return nil, err
 	}
