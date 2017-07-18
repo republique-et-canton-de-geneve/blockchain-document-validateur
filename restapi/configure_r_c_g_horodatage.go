@@ -8,6 +8,7 @@ import (
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
+	swag "github.com/go-openapi/swag"
 	graceful "github.com/tylerb/graceful"
 
 	internal "github.com/Magicking/rc-ge-ch-pdf/internal"
@@ -18,8 +19,27 @@ import (
 
 //go:generate swagger generate server --target .. --name  --spec ../docs/rc-ge-ch.yml
 
+var ethopts struct {
+	WsURI      string `long:"ws-uri" env:"WS_URI" description:"Ethereum WS URI (e.g: ws://HOST:8546)"`
+	PrivateKey string `long:"pkey" env:"PRIVATE_KEY" description:"hex encoded private key"`
+}
+
+var serviceopts struct {
+	DbDSN string `long:"db-dsn" env:"DB_DSN" description:"Database DSN (e.g: /tmp/test.sqlite)"`
+}
+
 func configureFlags(api *operations.RCGHorodatageAPI) {
-	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
+	ethOpts := swag.CommandLineOptionsGroup{
+		LongDescription:  "",
+		ShortDescription: "Ethereum options",
+		Options:          &ethopts,
+	}
+	serviceOpts := swag.CommandLineOptionsGroup{
+		LongDescription:  "",
+		ShortDescription: "Service options",
+		Options:          &serviceopts,
+	}
+	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ethOpts, serviceOpts}
 }
 
 func configureAPI(api *operations.RCGHorodatageAPI) http.Handler {
@@ -32,7 +52,9 @@ func configureAPI(api *operations.RCGHorodatageAPI) http.Handler {
 	// Example:
 	// s.api.Logger = log.Printf
 
-	ctx := internal.NewDBToContext(context.Background(), "database.sqlite")
+	ctx := internal.NewDBToContext(context.Background(), serviceopts.DbDSN)
+	ctx = internal.NewCCToContext(ctx, ethopts.WsURI)
+	ctx = internal.NewBLKToContext(ctx, ethopts.WsURI, ethopts.PrivateKey)
 
 	api.JSONConsumer = runtime.JSONConsumer()
 

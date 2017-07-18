@@ -3,7 +3,6 @@ package internal
 import (
 	"context"
 	"fmt"
-	blktk "github.com/Magicking/gethitihteg"
 	ethtk "github.com/Magicking/gethitihteg/ethereum"
 	"github.com/Magicking/rc-ge-ch-pdf/internal/merkle"
 	"golang.org/x/crypto/sha3"
@@ -13,13 +12,10 @@ import (
 	"strings"
 )
 
-const pkey = "18030537dbdd38d0764947d40bed98fc4d2a21af82765a7de7b13d2e4076773c"
-const gethUrl = "http://1.1.3.7:8545/"
-
-func sendData(data []byte) (string, error) {
-	blkCtx, err := blktk.NewBlockchainContext(gethUrl, pkey)
-	if err != nil {
-		log.Fatalf("blktk.newblockchaincontext: %v", err)
+func sendData(ctx context.Context, data []byte) (string, error) {
+	blkCtx, ok := BLKFromContext(ctx)
+	if !ok {
+		log.Fatalf("blktk.newblockchaincontext")
 	}
 	anchor := ethtk.NewAnchor(&blkCtx.AO.Address, blkCtx.NC)
 	tx, err := anchor.PrepareData(blkCtx.AO.Transactor, data)
@@ -83,7 +79,7 @@ func UploadHandler(ctx context.Context, prefix string, handler http.Handler) htt
 		}
 		receipts, merkleRoot := NewChainpoints(hashs)
 		//send merkleroot
-		txhash, err := sendData(merkleRoot)
+		txhash, err := sendData(ctx, merkleRoot)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

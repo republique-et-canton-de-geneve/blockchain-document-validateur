@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	blktk "github.com/Magicking/gethitihteg"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"golang.org/x/crypto/sha3"
@@ -46,21 +45,21 @@ func deriveSigner(V *big.Int) types.Signer {
 	}
 }
 
-func getData(hash common.Hash) ([]byte, *big.Int, string, error) {
-	blkNC, err := blktk.Dial(gethUrl)
-	if err != nil {
-		log.Fatalf("blktk.Dial: %v\n", err)
+func getData(ctx context.Context, hash common.Hash) ([]byte, *big.Int, string, error) {
+	ccCtx, ok := CCFromContext(ctx)
+	if !ok {
+		log.Fatalf("Could not obtain ClientConnector from context: %v\n")
 	}
-	tx, hdr_hash, err := blkNC.TransactionByHashFull(context.TODO(), hash)
+	tx, hdr_hash, err := ccCtx.TransactionByHashFull(context.TODO(), hash)
 	if err != nil {
-		return nil, nil, "", fmt.Errorf("blkNC.TransactionByHashFull: %v\n", err)
+		return nil, nil, "", fmt.Errorf("ccCtx.TransactionByHashFull: %v\n", err)
 	}
 	if hdr_hash == nil {
 		return nil, nil, "", fmt.Errorf("Transaction pending")
 	}
-	hdr, err := blkNC.HeaderByHash(context.TODO(), *hdr_hash)
+	hdr, err := ccCtx.HeaderByHash(context.TODO(), *hdr_hash)
 	if err != nil {
-		return nil, nil, "", fmt.Errorf("blkNC.TransactionByHashFull: %v\n", err)
+		return nil, nil, "", fmt.Errorf("ccCtx.TransactionByHashFull: %v\n", err)
 	}
 	v, _, _ := tx.RawSignatureValues()
 	var from string
@@ -79,7 +78,7 @@ func getData(hash common.Hash) ([]byte, *big.Int, string, error) {
 	return tx.Data(), hdr.Time, from, nil
 }
 
-func validateReceipt(receipt *Chainpoint, hash common.Hash) (*big.Int, string, error) {
+func validateReceipt(ctx context.Context, receipt *Chainpoint, hash common.Hash) (*big.Int, string, error) {
 	if !receipt.MerkleVerify() {
 		return nil, "", fmt.Errorf("Invalid receipt")
 	}
@@ -94,7 +93,7 @@ func validateReceipt(receipt *Chainpoint, hash common.Hash) (*big.Int, string, e
 	for _, v := range receipt.Anchors {
 		if v.Type == "ETHData" {
 			sourceId := common.HexToHash(v.SourceID)
-			data, anchor_date, from, err := getData(sourceId)
+			data, anchor_date, from, err := getData(ctx, sourceId)
 			log.Printf("anchor_date: %v, from: %v", anchor_date, from)
 			if err != nil {
 				return nil, "", fmt.Errorf("The transaction inexistent: %v\nTx hash: %s\n", err, v.SourceID)
@@ -174,7 +173,7 @@ func ValidateHandler(ctx context.Context, prefix string, handler http.Handler) h
 			http.Error(w, fmt.Sprintf("Invalid number of file, should be FILE + FILE RECEIPT"), http.StatusInternalServerError)
 			return
 		}
-		anchor_date, from, err := validateReceipt(&receipt, common.BytesToHash(hash))
+		anchor_date, from, err := validateReceipt(ctx, &receipt, common.BytesToHash(hash))
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Could not validate Receipt: %v", err), http.StatusInternalServerError)
 			return
