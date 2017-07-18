@@ -53,7 +53,7 @@ $(function() {
     paramName: "myfiles",
     dictDefaultMessage: "Cliquez ici ou déplacer les extraits au format PDF",
     dictFallbackMessage: "Cliquez ici ou déplacer les extraits au format PDF",
-    maxFile: 100,
+    parallelUploads: 256,
     autoProcessQueue: false,
     successmultiple: successmultiple,
       errormultiple: errormultiple,
