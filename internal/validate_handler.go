@@ -48,7 +48,7 @@ func deriveSigner(V *big.Int) types.Signer {
 func getData(ctx context.Context, hash common.Hash) ([]byte, *big.Int, string, error) {
 	ccCtx, ok := CCFromContext(ctx)
 	if !ok {
-		log.Fatalf("Could not obtain ClientConnector from context: %v\n")
+		log.Fatalf("Could not obtain ClientConnector from context\n")
 	}
 	tx, hdr_hash, err := ccCtx.TransactionByHashFull(context.TODO(), hash)
 	if err != nil {

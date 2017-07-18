@@ -22,7 +22,7 @@ func NewCCToContext(ctx context.Context, wsURI string) context.Context {
 }
 
 func CCFromContext(ctx context.Context) (*blktk.ClientConnector, bool) {
-	cc, ok := ctx.Value(blkKey).(*blktk.ClientConnector)
+	cc, ok := ctx.Value(ethRpcKey).(*blktk.ClientConnector)
 	return cc, ok
 }
 
