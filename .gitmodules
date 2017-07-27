@@ -121,3 +121,6 @@
 [submodule "vendor/github.com/lib/pq"]
 	path = vendor/github.com/lib/pq
 	url = https://github.com/lib/pq
+[submodule "vendor/github.com/Magicking/rc-ge-ch-pdf"]
+	path = vendor/github.com/Magicking/rc-ge-ch-pdf
+	url = https://github.com/Magicking/rc-ge-ch-pdf
