@@ -10,18 +10,18 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-// NewListtimestampedParams creates a new ListtimestampedParams object
+// NewGetStatusParams creates a new GetStatusParams object
 // with the default values initialized.
-func NewListtimestampedParams() ListtimestampedParams {
+func NewGetStatusParams() GetStatusParams {
 	var ()
-	return ListtimestampedParams{}
+	return GetStatusParams{}
 }
 
-// ListtimestampedParams contains all the bound params for the listtimestamped operation
+// GetStatusParams contains all the bound params for the get status operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters listtimestamped
-type ListtimestampedParams struct {
+// swagger:parameters getStatus
+type GetStatusParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request
@@ -29,7 +29,7 @@ type ListtimestampedParams struct {
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls
-func (o *ListtimestampedParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+func (o *GetStatusParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 	o.HTTPRequest = r
 

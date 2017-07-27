@@ -2,8 +2,8 @@ FROM golang
 MAINTAINER Sylvain Laurent
 
 ENV GOBIN $GOPATH/bin
-ENV PROJECT_DIR github.com/Magicking/rc-ge-ch-pdf
-ENV PROJECT_NAME r-c-g-horodatage-server
+ENV PROJECT_DIR github.com/Magicking/rc-ge-validator
+ENV PROJECT_NAME r-c-g-horodatage-validateur-server
 
 ADD vendor /usr/local/go/src
 ADD cmd /go/src/${PROJECT_DIR}/cmd

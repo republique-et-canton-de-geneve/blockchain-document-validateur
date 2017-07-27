@@ -21,57 +21,20 @@ func init() {
   "swagger": "2.0",
   "info": {
     "description": "RCG horodatage est un service qui permet l'horodatage numérique via\nsur la blockchain Ethereum.\nLe principe est d'envoyer des fichiers qui sont ensuite passer dans\nune fonction hachage SHA3-256. Les « hash » sont ensuite intégrés\ndans un arbre de Merkle dont la racine est inséré dans une\ntransaction blockchain, l'(es) adresse(s) signant la transaction\nidentifie le Registre du Commerce, c'est une information qui doit\nêtre publique.\n",
-    "title": "RCG horodatage",
+    "title": "RCG horodatage - Validateur",
     "version": "0.1.0"
   },
   "paths": {
-    "/horodatage": {
+    "/status": {
       "get": {
-        "description": "Liste les fichiers horodatés\n",
-        "summary": "Liste les fichiers horodatés",
-        "operationId": "listtimestamped",
+        "description": "Retourne divers informations par le service\n",
+        "summary": "Retourne des informations variés",
+        "operationId": "getStatus",
         "responses": {
           "200": {
-            "description": "Liste des fichiers qui ont été horodaté\n",
+            "description": "Information document",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ReceiptFile"
-              }
-            }
-          },
-          "default": {
-            "description": "Internal error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/recu": {
-      "get": {
-        "description": "Retourne le fichier avec le reçu associé au hash fourni\n",
-        "produces": [
-          "application/octet-stream",
-          "application/json"
-        ],
-        "summary": "Retourne le fichier avec le reçu",
-        "operationId": "getreceipt",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "Le hash identifiant un fichier",
-            "name": "hash",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Fichier de reçu de l'horodatage certifié blockchain\n",
-            "schema": {
-              "type": "file"
+              "$ref": "#/definitions/Informations"
             }
           },
           "default": {
@@ -104,19 +67,10 @@ func init() {
         }
       }
     },
-    "ReceiptFile": {
+    "Informations": {
       "type": "object",
       "properties": {
-        "filename": {
-          "type": "string"
-        },
-        "hash": {
-          "type": "string"
-        },
-        "horodatingaddress": {
-          "type": "string"
-        },
-        "transactionhash": {
+        "locked_key": {
           "type": "string"
         }
       }

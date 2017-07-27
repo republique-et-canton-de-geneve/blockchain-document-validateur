@@ -1,4 +1,4 @@
-/*Package restapi RCG horodatage
+/*Package restapi RCG horodatage - Validateur
 
 RCG horodatage est un service qui permet l'horodatage numérique via
 sur la blockchain Ethereum.
@@ -23,8 +23,6 @@ identifie le Registre du Commerce, c'est une information qui doit
 
     Produces:
     - application/json
-
-    - application/octet-stream
 
 
 swagger:meta

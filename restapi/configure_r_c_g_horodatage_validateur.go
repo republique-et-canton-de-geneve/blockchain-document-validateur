@@ -11,38 +11,28 @@ import (
 	swag "github.com/go-openapi/swag"
 	graceful "github.com/tylerb/graceful"
 
-	internal "github.com/Magicking/rc-ge-ch-pdf/internal"
-	"github.com/Magicking/rc-ge-ch-pdf/restapi/operations"
+	internal "github.com/Magicking/rc-ge-validator/internal"
+	"github.com/Magicking/rc-ge-validator/restapi/operations"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten
 
-//go:generate swagger generate server --target .. --name  --spec ../docs/rc-ge-ch.yml
+//go:generate swagger generate server --target .. --name  --spec ../docs/rc-ge-validator.yml
 
 var ethopts struct {
-	WsURI      string `long:"ws-uri" env:"WS_URI" description:"Ethereum WS URI (e.g: ws://HOST:8546)"`
-	PrivateKey string `long:"pkey" env:"PRIVATE_KEY" description:"hex encoded private key"`
+	WsURI string `long:"ws-uri" env:"WS_URI" description:"Ethereum WS URI (e.g: ws://HOST:8546)"`
 }
 
-var serviceopts struct {
-	DbDSN string `long:"db-dsn" env:"DB_DSN" description:"Database DSN (e.g: /tmp/test.sqlite)"`
-}
-
-func configureFlags(api *operations.RCGHorodatageAPI) {
+func configureFlags(api *operations.RCGHorodatageValidateurAPI) {
 	ethOpts := swag.CommandLineOptionsGroup{
 		LongDescription:  "",
 		ShortDescription: "Ethereum options",
 		Options:          &ethopts,
 	}
-	serviceOpts := swag.CommandLineOptionsGroup{
-		LongDescription:  "",
-		ShortDescription: "Service options",
-		Options:          &serviceopts,
-	}
 	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ethOpts, serviceOpts}
 }
 
-func configureAPI(api *operations.RCGHorodatageAPI) http.Handler {
+func configureAPI(api *operations.RCGHorodatageValidateurAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -52,21 +42,14 @@ func configureAPI(api *operations.RCGHorodatageAPI) http.Handler {
 	// Example:
 	// s.api.Logger = log.Printf
 
-	ctx := internal.NewDBToContext(context.Background(), serviceopts.DbDSN)
-	ctx = internal.NewCCToContext(ctx, ethopts.WsURI)
-	ctx = internal.NewBLKToContext(ctx, ethopts.WsURI, ethopts.PrivateKey)
+	ctx := internal.NewCCToContext(context.Background(), ethopts.WsURI)
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.BinProducer = runtime.ByteStreamProducer()
-
-	api.GetreceiptHandler = operations.GetreceiptHandlerFunc(func(params operations.GetreceiptParams) middleware.Responder {
-		return internal.GetreceiptHandler(ctx, params)
-	})
-	api.ListtimestampedHandler = operations.ListtimestampedHandlerFunc(func(params operations.ListtimestampedParams) middleware.Responder {
-		return internal.ListtimestampedHandler(ctx, params)
+	api.GetStatusHandler = operations.GetStatusHandlerFunc(func(params operations.GetStatusParams) middleware.Responder {
+		return middleware.NotImplemented("operation .GetStatus has not yet been implemented")
 	})
 
 	api.ServerShutdown = func() {}
@@ -95,5 +78,5 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics
 func setupGlobalMiddleware(ctx context.Context, handler http.Handler) http.Handler {
-	return internal.ValidateHandler(ctx, "/validate", internal.UploadHandler(ctx, "/upload", handler))
+	return internal.ValidateHandler(ctx, "/validate", handler)
 }

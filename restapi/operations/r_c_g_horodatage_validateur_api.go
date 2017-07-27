@@ -17,9 +17,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewRCGHorodatageAPI creates a new RCGHorodatage instance
-func NewRCGHorodatageAPI(spec *loads.Document) *RCGHorodatageAPI {
-	return &RCGHorodatageAPI{
+// NewRCGHorodatageValidateurAPI creates a new RCGHorodatageValidateur instance
+func NewRCGHorodatageValidateurAPI(spec *loads.Document) *RCGHorodatageValidateurAPI {
+	return &RCGHorodatageValidateurAPI{
 		handlers:        make(map[string]map[string]http.Handler),
 		formats:         strfmt.Default,
 		defaultConsumes: "application/json",
@@ -29,17 +29,13 @@ func NewRCGHorodatageAPI(spec *loads.Document) *RCGHorodatageAPI {
 		ServeError:      errors.ServeError,
 		JSONConsumer:    runtime.JSONConsumer(),
 		JSONProducer:    runtime.JSONProducer(),
-		BinProducer:     runtime.ByteStreamProducer(),
-		GetreceiptHandler: GetreceiptHandlerFunc(func(params GetreceiptParams) middleware.Responder {
-			return middleware.NotImplemented("operation Getreceipt has not yet been implemented")
-		}),
-		ListtimestampedHandler: ListtimestampedHandlerFunc(func(params ListtimestampedParams) middleware.Responder {
-			return middleware.NotImplemented("operation Listtimestamped has not yet been implemented")
+		GetStatusHandler: GetStatusHandlerFunc(func(params GetStatusParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetStatus has not yet been implemented")
 		}),
 	}
 }
 
-/*RCGHorodatageAPI RCG horodatage est un service qui permet l'horodatage numérique via
+/*RCGHorodatageValidateurAPI RCG horodatage est un service qui permet l'horodatage numérique via
 sur la blockchain Ethereum.
 Le principe est d'envoyer des fichiers qui sont ensuite passer dans
 une fonction hachage SHA3-256. Les « hash » sont ensuite intégrés
@@ -48,7 +44,7 @@ transaction blockchain, l'(es) adresse(s) signant la transaction
 identifie le Registre du Commerce, c'est une information qui doit
 être publique.
 */
-type RCGHorodatageAPI struct {
+type RCGHorodatageValidateurAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -61,13 +57,9 @@ type RCGHorodatageAPI struct {
 
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
-	// BinProducer registers a producer for a "application/octet-stream" mime type
-	BinProducer runtime.Producer
 
-	// GetreceiptHandler sets the operation handler for the getreceipt operation
-	GetreceiptHandler GetreceiptHandler
-	// ListtimestampedHandler sets the operation handler for the listtimestamped operation
-	ListtimestampedHandler ListtimestampedHandler
+	// GetStatusHandler sets the operation handler for the get status operation
+	GetStatusHandler GetStatusHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -85,42 +77,42 @@ type RCGHorodatageAPI struct {
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *RCGHorodatageAPI) SetDefaultProduces(mediaType string) {
+func (o *RCGHorodatageValidateurAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *RCGHorodatageAPI) SetDefaultConsumes(mediaType string) {
+func (o *RCGHorodatageValidateurAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *RCGHorodatageAPI) SetSpec(spec *loads.Document) {
+func (o *RCGHorodatageValidateurAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *RCGHorodatageAPI) DefaultProduces() string {
+func (o *RCGHorodatageValidateurAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *RCGHorodatageAPI) DefaultConsumes() string {
+func (o *RCGHorodatageValidateurAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *RCGHorodatageAPI) Formats() strfmt.Registry {
+func (o *RCGHorodatageValidateurAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *RCGHorodatageAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *RCGHorodatageValidateurAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the RCGHorodatageAPI
-func (o *RCGHorodatageAPI) Validate() error {
+// Validate validates the registrations in the RCGHorodatageValidateurAPI
+func (o *RCGHorodatageValidateurAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -131,16 +123,8 @@ func (o *RCGHorodatageAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.BinProducer == nil {
-		unregistered = append(unregistered, "BinProducer")
-	}
-
-	if o.GetreceiptHandler == nil {
-		unregistered = append(unregistered, "GetreceiptHandler")
-	}
-
-	if o.ListtimestampedHandler == nil {
-		unregistered = append(unregistered, "ListtimestampedHandler")
+	if o.GetStatusHandler == nil {
+		unregistered = append(unregistered, "GetStatusHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -151,19 +135,19 @@ func (o *RCGHorodatageAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *RCGHorodatageAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *RCGHorodatageValidateurAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *RCGHorodatageAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *RCGHorodatageValidateurAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
 	return nil
 
 }
 
 // ConsumersFor gets the consumers for the specified media types
-func (o *RCGHorodatageAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *RCGHorodatageValidateurAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 
 	result := make(map[string]runtime.Consumer)
 	for _, mt := range mediaTypes {
@@ -179,7 +163,7 @@ func (o *RCGHorodatageAPI) ConsumersFor(mediaTypes []string) map[string]runtime.
 }
 
 // ProducersFor gets the producers for the specified media types
-func (o *RCGHorodatageAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *RCGHorodatageValidateurAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 
 	result := make(map[string]runtime.Producer)
 	for _, mt := range mediaTypes {
@@ -188,9 +172,6 @@ func (o *RCGHorodatageAPI) ProducersFor(mediaTypes []string) map[string]runtime.
 		case "application/json":
 			result["application/json"] = o.JSONProducer
 
-		case "application/octet-stream":
-			result["application/octet-stream"] = o.BinProducer
-
 		}
 	}
 	return result
@@ -198,7 +179,7 @@ func (o *RCGHorodatageAPI) ProducersFor(mediaTypes []string) map[string]runtime.
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *RCGHorodatageAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *RCGHorodatageValidateurAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -213,8 +194,8 @@ func (o *RCGHorodatageAPI) HandlerFor(method, path string) (http.Handler, bool) 
 	return h, ok
 }
 
-// Context returns the middleware context for the r c g horodatage API
-func (o *RCGHorodatageAPI) Context() *middleware.Context {
+// Context returns the middleware context for the r c g horodatage validateur API
+func (o *RCGHorodatageValidateurAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -222,7 +203,7 @@ func (o *RCGHorodatageAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *RCGHorodatageAPI) initHandlerCache() {
+func (o *RCGHorodatageValidateurAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 
 	if o.handlers == nil {
@@ -232,18 +213,13 @@ func (o *RCGHorodatageAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/recu"] = NewGetreceipt(o.context, o.GetreceiptHandler)
-
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/horodatage"] = NewListtimestamped(o.context, o.ListtimestampedHandler)
+	o.handlers["GET"]["/status"] = NewGetStatus(o.context, o.GetStatusHandler)
 
 }
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *RCGHorodatageAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *RCGHorodatageValidateurAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -253,7 +229,7 @@ func (o *RCGHorodatageAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middelware as you see fit
-func (o *RCGHorodatageAPI) Init() {
+func (o *RCGHorodatageValidateurAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}

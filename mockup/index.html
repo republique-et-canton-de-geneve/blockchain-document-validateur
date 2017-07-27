@@ -24,6 +24,7 @@
 		content="Etat de Genève, GE, informations, administration, administrations, administration services publics, officiel, état, canton, Genève, Suisse, PRE, CHA, DF, DIP, DSE, DALE, DETA, DEAS" />
 	<meta name="rating" content="general" />
 	<meta name="referrer" content="origin" />
+	<meta name="robots" content="noindex">
 	<meta name="rights" content="Etat de Genève" />
 	<meta name="geo.position" content="46.201174;6.146636" />
 	<meta name="geo.placename" content="Genève" />
@@ -39,7 +40,7 @@
 	<!-- TITRE et DESCRIPTION -->	
 	<meta itemprop="description" content="Charte 2016 template AEL Commun" />
 	<meta name="description" content="Charte 2016 template AEL Commun" />
-	<title>Horodateur | République et canton de Genève</title>
+	<title>Horodateur - République et canton de Genève</title>
 	
 	<!-- STYLES -->
 	<style>
@@ -72,15 +73,13 @@
 	<script src="charte_2016/bootstrap/js/transition.js?ody61c"></script>
 	<script src="charte_2016/js/datepicker-fr.js?ody61c"></script>
 	<script src="charte_2016/js/jquery.cookie.js?ody61c"></script>
-	<script src="js/angular.min.js?ody61c"></script>
 	<script src="js/dropzone.js?ody61g"></script>
-	<script src="js/rcge.js?ody61c"></script>
 
 <!--[if gte mso 9]><xml>
 <mso:CustomDocumentProperties>
-<mso:_dlc_DocId msdt:dt="string">DOCPROJ01-630249177-77</mso:_dlc_DocId>
-<mso:_dlc_DocIdItemGuid msdt:dt="string">a99c4236-1b51-47e0-9e13-1ebc00fa1d52</mso:_dlc_DocIdItemGuid>
-<mso:_dlc_DocIdUrl msdt:dt="string">https://ecd.ge.ch/dgsi-projets/01/2559/_layouts/15/DocIdRedir.aspx?ID=DOCPROJ01-630249177-77, DOCPROJ01-630249177-77</mso:_dlc_DocIdUrl>
+<mso:_dlc_DocId msdt:dt="string">DOCPROJ01-630249177-76</mso:_dlc_DocId>
+<mso:_dlc_DocIdItemGuid msdt:dt="string">0f7d6184-bad9-48c8-9a11-89375df9f7c6</mso:_dlc_DocIdItemGuid>
+<mso:_dlc_DocIdUrl msdt:dt="string">https://ecd.ge.ch/dgsi-projets/01/2559/_layouts/15/DocIdRedir.aspx?ID=DOCPROJ01-630249177-76, DOCPROJ01-630249177-76</mso:_dlc_DocIdUrl>
 </mso:CustomDocumentProperties>
 </xml><![endif]-->
 </head>
@@ -89,7 +88,6 @@
 	<div id="skip-link">
 		<a href="#main-content" class="element-invisible element-focusable">Aller au contenu principal</a>
 	</div>
-
 	<div class="print-only print-logo">
 		<img src="charte_2016/logo.svg" width="100px"
 			height="75px" alt="République et canton de Genève"
@@ -143,7 +141,7 @@
 							<div class="container-fluid">
 								<div class="navbar-header">
 									<h1>
-										Horodatage et signature numérique blockchain
+										Validateur de documents
 									</h1>
 								</div>
 							</div>
@@ -166,45 +164,26 @@
 								<div class="region region-content">
 									<section id="block-system-main" class="block block-system clearfix">
 										<div class="panel-main">
-                                          L'Etat de Genève certifie les extraits électroniques grâce à la technologie <a href="https://demain.ge.ch/blog/geneve-lab/blockchain-presentee-discutee-lors-cafe-republique-numerique-22-03-2017">Blockchain</a>.
-Pour ce faire, il est nécessaire de télécharger l'extrait PDF et d'envoyer par email l'extrait et le reçu (formule de clôture).</br></br>
-Les utilisateurs pourront vérifier l'extrait électronique depuis le validateur <a href="https://certif.blockchainpartner.ch/validateur.html">blockchain.ge.ch</a>.</br></br>
-Ces extraits n'ont pas de validités juridiques pour le moment et l'objectif est de s'inscrire dans le cadre de la mise en œuvre de l'ordonnance sur l'établissement d'actes authentiques électroniques et les légalisations électroniques (OAAE).</br></br>
-<div ng-controller="extract" ng-app="rc">
+                                          Vous souhaitez vérifier qu'un extrait électronique délivré par l'Etat de Genève est certifié conforme ?</br></br>
+Notre validateur vous permet de télécharger l'extrait et le reçu (formule de clôture) pour vérifier que l'extrait électronique offre autant de sécurité que l'extrait papier.</br></br>
+L'Etat de Genève expérimente la technologie <a href="https://demain.ge.ch/blog/geneve-lab/blockchain-presentee-discutee-lors-cafe-republique-numerique-22-03-2017">blockchain</a> afin d'horodater et de signer les extraits numériques. Ces extraits n'ont pas de validités juridiques pour le moment et l'objectif est de s'inscrire dans le cadre de la mise en œuvre de l'ordonnance sur l'établissement d'actes authentiques électroniques et les légalisations électroniques (OAAE). </br></br>
+<div class="content-wrap">
+   <div class="row">
+      <div class="col-sm-12">
          <div class="nest" id="DropZoneClose">
             <div class="body-nest" id="DropZone">
-               <div id="uploadextraitzone" class="dropzone"></div>
-                   <div id="infobox" class="alert alert-info">Veuillez téléverser les fichiers extraits</div>
+               <div id="validatezone" class="dropzone"></div>
+                   <div id="infobox" class="alert alert-info">Veuillez téléverser votre fichier ainsi que son reçu (fichier du même nom avec une extension .json).</div>
                <button style="margin-top: 10px;" class="btn btn-primary" id="submit-all" onclick="processValidate()" >
-                   Horodater
+                   Valider
                </button>
             </div>
          </div>
-      <div class="col-md-11 col-md-offset-1">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nom du fichier extrait</th>
-              <th>Identifiant de fichier</th>
-              <th>Identifiant de transaction</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="item in extract_list">
-              <th scope="row">{{ $index }}</th>
-              <td>{{ item.filename }}</td>
-              <td>{{ item.hash | limitTo:numLimit }}…&nbsp;<a href="/api/recu?hash={{ item.hash }}">
-                  <button type="button" class="btn btn-primary btn-sm">Reçu</button>
-                  </a>
-              </td>
-              <td><a href="https://ropsten.etherscan.io/tx/{{ item.transactionhash }}" target="_blank">{{ item.transactionhash | limitTo:numLimit }}…</a></td>
-            </tr>
-          </tbody>
-        </table>
       </div>
-    </div>
+   </div>
 </div>
+	<script src="js/validateur.js?ody6"></script>
+										</div>
 										<div id="pageBesoinAide">
 											<div class="container">
 												<div>

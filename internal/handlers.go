@@ -8,8 +8,8 @@ import (
 	"log"
 	"net/http"
 
-	models "github.com/Magicking/rc-ge-ch-pdf/models"
-	op "github.com/Magicking/rc-ge-ch-pdf/restapi/operations"
+	models "github.com/Magicking/rc-ge-validator/models"
+	op "github.com/Magicking/rc-ge-validator/restapi/operations"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 )
