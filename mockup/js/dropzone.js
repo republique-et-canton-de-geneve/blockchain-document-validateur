@@ -361,16 +361,17 @@
       error: function(file, message) {
         var j, len, node, ref, results;
         if (file.previewElement) {
-          file.previewElement.classList.add("dz-error");
+//          file.previewElement.classList.add("dz-error");
           if (typeof message !== "String" && message.error) {
-            message = message.error;
-          }
+//            message = message.error;
+            console.log(message.error);
+          }/*
           ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
           results = [];
           for (j = 0, len = ref.length; j < len; j++) {
             node = ref[j];
             results.push(node.textContent = message);
-          }
+          }*/
           return results;
         }
       },
