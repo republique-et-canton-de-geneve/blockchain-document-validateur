@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"net/http"
+	"strings"
 
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
@@ -20,7 +21,8 @@ import (
 //go:generate swagger generate server --target .. --name  --spec ../docs/rc-ge-validator.yml
 
 var ethopts struct {
-	WsURI string `long:"ws-uri" env:"WS_URI" description:"Ethereum WS URI (e.g: ws://HOST:8546)"`
+	WsURI         string `long:"ws-uri" env:"WS_URI" description:"Ethereum WS URI (e.g: ws://HOST:8546)"`
+	LockedAddress string `long:"locked-addr" env:"LOCKED_ADDR" description:"Ethereum address of the sole verifier (anchor emitter)"`
 }
 
 func configureFlags(api *operations.RCGHorodatageValidateurAPI) {
@@ -29,7 +31,7 @@ func configureFlags(api *operations.RCGHorodatageValidateurAPI) {
 		ShortDescription: "Ethereum options",
 		Options:          &ethopts,
 	}
-	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ethOpts, serviceOpts}
+	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ethOpts}
 }
 
 func configureAPI(api *operations.RCGHorodatageValidateurAPI) http.Handler {
@@ -78,5 +80,6 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics
 func setupGlobalMiddleware(ctx context.Context, handler http.Handler) http.Handler {
-	return internal.ValidateHandler(ctx, "/validate", handler)
+	addr := strings.TrimPrefix(ethopts.LockedAddress, "0x")
+	return internal.ValidateHandler(ctx, "/validate", addr, handler)
 }

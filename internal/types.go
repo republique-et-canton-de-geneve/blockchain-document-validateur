@@ -3,13 +3,11 @@ package internal
 import (
 	"context"
 	blktk "github.com/Magicking/gethitihteg"
-	"github.com/jinzhu/gorm"
 	"log"
 )
 
 type key int
 
-var dbKey key = 0
 var blkKey key = 1
 var ethRpcKey key = 2
 
@@ -37,17 +35,4 @@ func NewBLKToContext(ctx context.Context, wsURI, privateKey string) context.Cont
 func BLKFromContext(ctx context.Context) (*blktk.BlockchainContext, bool) {
 	blk, ok := ctx.Value(blkKey).(*blktk.BlockchainContext)
 	return blk, ok
-}
-
-func NewDBToContext(ctx context.Context, dbDsn string) context.Context {
-	db, err := InitDatabase(dbDsn)
-	if err != nil {
-		log.Fatalf("Could not initialize database: %v", err)
-	}
-	return context.WithValue(ctx, dbKey, db)
-}
-
-func DBFromContext(ctx context.Context) (*gorm.DB, bool) {
-	db, ok := ctx.Value(dbKey).(*gorm.DB)
-	return db, ok
 }

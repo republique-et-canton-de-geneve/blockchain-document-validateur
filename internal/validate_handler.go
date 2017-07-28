@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	rcge "github.com/Magicking/rc-ge-ch-pdf/merkle"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"golang.org/x/crypto/sha3"
@@ -78,7 +79,7 @@ func getData(ctx context.Context, hash common.Hash) ([]byte, *big.Int, string, e
 	return tx.Data(), hdr.Time, from, nil
 }
 
-func validateReceipt(ctx context.Context, receipt *Chainpoint, hash common.Hash) (*big.Int, string, error) {
+func validateReceipt(ctx context.Context, receipt *rcge.Chainpoint, hash common.Hash) (*big.Int, string, error) {
 	if !receipt.MerkleVerify() {
 		return nil, "", fmt.Errorf("Invalid receipt")
 	}
@@ -116,7 +117,7 @@ type ValidateResponse struct {
 	Time       *big.Int `json:"time"`
 }
 
-func ValidateHandler(ctx context.Context, prefix string, handler http.Handler) http.Handler {
+func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler http.Handler) http.Handler {
 	middle := func(w http.ResponseWriter, r *http.Request) {
 		if !strings.HasPrefix(r.URL.Path, prefix) {
 			handler.ServeHTTP(w, r)
@@ -140,7 +141,7 @@ func ValidateHandler(ctx context.Context, prefix string, handler http.Handler) h
 		}
 		receipt_found := false
 		var hash []byte
-		var receipt Chainpoint
+		var receipt rcge.Chainpoint
 		for i, _ := range files {
 			//for each fileheader, get a handle to the actual file
 			file, err := files[i].Open()
@@ -176,6 +177,10 @@ func ValidateHandler(ctx context.Context, prefix string, handler http.Handler) h
 		anchor_date, from, err := validateReceipt(ctx, &receipt, common.BytesToHash(hash))
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Could not validate Receipt: %v", err), http.StatusInternalServerError)
+			return
+		}
+		if from != lockedAddress {
+			http.Error(w, fmt.Sprintf("Unvalid receipt, could not valid submitter"), http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
