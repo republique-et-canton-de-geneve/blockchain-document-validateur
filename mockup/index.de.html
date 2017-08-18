@@ -160,14 +160,20 @@
 				<div class="content">
 					<div class="container">
 						<div class="row">
-							<div class="col-xs-12">
 								<div class="region region-content">
+							<div class="col-xs-12">
 									<section id="block-system-main" class="block block-system clearfix">
 										<div class="panel-main">
-                                          L'Etat de Genève expérimente la technologie Blockchain afin d'horodater et de signer les extraits numériques. C'est la première fois en Suisse que cette technologie prometteuse est utilisée dans ce contexte, raison pour laquelle la Confédération soutient ce <a href="https://www.egovernment.ch/fr/umsetzung/innovationen/innovations-20172018/">projet dans le cadre des projets d'innovation 2017/2018 d'E-Government Suisse</a>.</br></br>
-                                          Durant cette phase pilote, les extraits n'ont pas de validité juridique. L'objectif est de s'inscrire dans le cadre de la mise en œuvre de <a href="https://www.admin.ch/opc/fr/classified-compilation/20111505/201701010000/943.033.pdf">l'ordonnance sur l'établissement d'actes authentiques électroniques et les légalisations électroniques (OAAE)</a>.</br></br>
-                                          Cette technologie permet dorénavant à l'Etat de Genève d'horodater et de signer les extraits électroniques. Il est dès lors possible pour n'importe qui de vérifier qu'un extrait électronique a bien été délivré par l'Etat de Genève grâce à un service de validation en ligne: <a href="https://blockchain.ge.ch">https://blockchain.ge.ch/validation</a>.</br></br>
-                                          Vous retrouverez toutes les informations sur cette expérimentation sur ce lien : <a href="https://demain.ge.ch/dossier/geneve-numerique/Blockchain">https://demain.ge.ch/dossier/geneve-numerique/Blockchain</a>.</br></br>
+        <ul class="list-inline">
+            <li><a href="fr" role="button" class="imgInto liens-images-externes" title="Lire la version française">FR</a></li>
+            <li><a href="en" role="button" class="imgInto liens-images-externes" title="Read the english version">EN</a></li>
+            <li><a href="de" role="button" class="imgInto liens-images-externes" title="Lesen Sie die deutsche Version">DE</a></li>
+            <li><a href="it" role="button" class="imgInto liens-images-externes" title="Leggere la versione francese">IT</a></li>
+        </ul>
+L'Etat de Genève expérimente la technologie Blockchain afin d'horodater et de signer les extraits numériques. C'est la première fois en Suisse que cette technologie prometteuse est utilisée dans ce contexte, raison pour laquelle la Confédération soutient ce <a href="https://www.egovernment.ch/fr/umsetzung/innovationen/innovations-20172018/">projet dans le cadre des projets d'innovation 2017/2018 d'E-Government Suisse</a>.</br></br>
+Durant cette phase pilote, les extraits n'ont pas de validité juridique. L'objectif est de s'inscrire dans le cadre de la mise en œuvre de <a href="https://www.admin.ch/opc/fr/classified-compilation/20111505/201701010000/943.033.pdf">l'ordonnance sur l'établissement d'actes authentiques électroniques et les légalisations électroniques (OAAE)</a>.</br></br>
+Cette technologie permet dorénavant à l'Etat de Genève d'horodater et de signer les extraits électroniques. Il est dès lors possible pour n'importe qui de vérifier qu'un extrait électronique a bien été délivré par l'Etat de Genève grâce à un service de validation en ligne: <a href="https://blockchain.ge.ch">https://blockchain.ge.ch/validation</a>.</br></br>
+Vous retrouverez toutes les informations sur cette expérimentation sur ce lien : <a href="https://demain.ge.ch/dossier/geneve-numerique/Blockchain">https://demain.ge.ch/dossier/geneve-numerique/Blockchain</a>.</br></br>
 <b>Comment faire ?</b></br>
 Vous pouvez téléverser l'extrait numérique PDF et le reçu PDF (formule de clôture) simultanément sur le service de validation de l'Etat de Genève : https://blockchain.ge.ch/validation/</br></br>
 <ul>
@@ -182,7 +188,12 @@ Les documents téléchargés sur le validateur en vue d'être vérifiés ne sont
          <div class="nest" id="DropZoneClose">
             <div class="body-nest" id="DropZone">
                <div id="validatezone" class="dropzone"></div>
-                   <div id="infobox" class="alert alert-info">Veuillez téléverser votre fichier ainsi que son reçu (fichier du même nom avec une extension .json).</div>
+                <div id="infobox" class="alert alert-info">
+                <span class="fa-stack">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i id="iconbox" class="fa fa-info fa-stack-1x fa-inverse"></i>
+                </span><span id="msgbox">Téléverser votre fichier ainsi que son reçu (fichier avec une extension .json).</span>
+            </div>
                <button style="margin-top: 10px;" class="btn btn-primary" id="submit-all" onclick="processValidate()" >
                    Valider
                </button>
