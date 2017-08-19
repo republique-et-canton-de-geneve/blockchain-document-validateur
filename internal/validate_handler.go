@@ -10,11 +10,15 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"golang.org/x/crypto/sha3"
 	"io"
+	"io/ioutil"
 	"log"
 	"math/big"
 	"net/http"
 	"strings"
 )
+
+var BEG_DELIM = []byte(":JsOnbegin:")
+var END_DELIM = []byte(":JsOnend:")
 
 func isProtectedV(V *big.Int) bool {
 	if V.BitLen() <= 8 {
@@ -117,6 +121,22 @@ type ValidateResponse struct {
 	Time       *big.Int `json:"time"`
 }
 
+func ExtractJson(r io.Reader) ([]byte, error) {
+	data, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+	begin := bytes.Index(data, BEG_DELIM)
+	end := bytes.Index(data, END_DELIM)
+	if begin < 0 || end < 0 {
+		return nil, fmt.Errorf("File is not a receipt")
+	}
+	data = data[begin+len(BEG_DELIM) : end]
+	data = bytes.Replace(data, []byte("\\173"), []byte("{"), -1)
+	data = bytes.Replace(data, []byte("\\175"), []byte("}"), -1)
+	return data, nil
+}
+
 func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler http.Handler) http.Handler {
 	middle := func(w http.ResponseWriter, r *http.Request) {
 		if !strings.HasPrefix(r.URL.Path, prefix) {
@@ -152,8 +172,11 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 			}
 
 			if !receipt_found {
-				dec := json.NewDecoder(file)
-				err = dec.Decode(&receipt)
+				data, err := ExtractJson(file)
+				if err != nil {
+					continue
+				}
+				err = json.Unmarshal(data, &receipt)
 				if err == nil {
 					receipt_found = true
 					continue
@@ -171,7 +194,7 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 			hash = h.Sum(nil)
 		}
 		if !receipt_found {
-			http.Error(w, fmt.Sprintf("Invalid number of file, should be FILE + FILE RECEIPT"), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("Invalid receipt file, should be FILE + FILE RECEIPT"), http.StatusInternalServerError)
 			return
 		}
 		anchor_date, from, err := validateReceipt(ctx, &receipt, common.BytesToHash(hash))
@@ -180,7 +203,7 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 			return
 		}
 		if from != lockedAddress {
-			http.Error(w, fmt.Sprintf("Unvalid receipt, could not valid submitter"), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("Invalid receipt, could not valid submitter"), http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
