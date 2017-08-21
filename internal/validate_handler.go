@@ -173,13 +173,12 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 
 			if !receipt_found {
 				data, err := ExtractJson(file)
-				if err != nil {
-					continue
-				}
-				err = json.Unmarshal(data, &receipt)
 				if err == nil {
-					receipt_found = true
-					continue
+					err = json.Unmarshal(data, &receipt)
+					if err == nil {
+						receipt_found = true
+						continue
+					}
 				}
 			}
 			h := sha3.New256()
