@@ -3,11 +3,11 @@ Dropzone.autoDiscover = false;
 var myDropzone;
 
 function successmultiple(files, message, e) {
+    for (i = 0; i < files.length; i++)
+        myDropzone.removeFile(files[i]);
     $("#infobox").attr("class", "alert alert-success");
     $("#iconbox").attr("class", "fa fa-check fa-stack-1x fa-inverse");
     $("#msgbox").html(messageValide);
-    for (i = 0; i < files.length; i++)
-        myDropzone.removeFile(files[i]);
 }
 function errormultiple(files, message, e) {
     $("#infobox").attr("class", "alert alert-danger");
@@ -26,6 +26,13 @@ $(function() {
     successmultiple: successmultiple,
       errormultiple: errormultiple,
       addRemoveLinks: true,
+    init: function() {
+        this.on("removedfile", function() {
+            $("#infobox").attr("class", "alert alert-info");
+            $("#iconbox").attr("class", "fa fa-info fa-stack-1x fa-inverse");
+            $("#msgbox").html(dictDefaultMessage);
+        });
+  }
   });
 });
 
