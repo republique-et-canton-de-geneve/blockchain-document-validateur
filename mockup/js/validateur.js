@@ -1,8 +1,6 @@
 var endpoint = 'api';
 Dropzone.autoDiscover = false;
 var myDropzone;
-var messageValide = "Documents valides";
-var messageInvalide = "Documents non valides";
 
 function successmultiple(files, message, e) {
     $("#infobox").attr("class", "alert alert-success");
@@ -21,8 +19,8 @@ $(function() {
     url : endpoint + "/validate",
     uploadMultiple: true,
     paramName: "myfiles",
-    dictDefaultMessage: "Téléverser votre fichier ainsi que son reçu.",
-    dictFallbackMessage:"Téléverser votre fichier ainsi que son reçu.",
+    dictDefaultMessage: dictDefaultMessage,
+    dictFallbackMessage:dictDefaultMessage,
     maxFile: 2,
     autoProcessQueue: false,
     successmultiple: successmultiple,
