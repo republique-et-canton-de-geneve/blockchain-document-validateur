@@ -14,4 +14,8 @@
   root /var/www
   log stdout
   errors stdout
+  rewrite {
+      to {path} {path}/ /demain/
+  }
+  redir /demain/ https://demain.ge.ch/dossier/geneve-numerique/blockchain
 }
