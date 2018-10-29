@@ -1,12 +1,5 @@
 # github.com/Magicking/gethitihteg v0.0.0-20180217210227-c8e376a587e7
 github.com/Magicking/gethitihteg
-github.com/Magicking/gethitihteg/ethereum
-# github.com/Magicking/rc-ge-ch-pdf v0.0.0-20171018080343-55ca149d06b7
-github.com/Magicking/rc-ge-ch-pdf/internal
-github.com/Magicking/rc-ge-ch-pdf/merkle
-github.com/Magicking/rc-ge-ch-pdf/models
-github.com/Magicking/rc-ge-ch-pdf/restapi/operations
-github.com/Magicking/rc-ge-ch-pdf/template
 # github.com/PuerkitoBio/purell v1.1.0
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
@@ -58,9 +51,9 @@ github.com/go-openapi/errors
 github.com/go-openapi/jsonpointer
 # github.com/go-openapi/jsonreference v0.17.0
 github.com/go-openapi/jsonreference
-# github.com/go-openapi/loads v0.17.0
+# github.com/go-openapi/loads v0.17.2
 github.com/go-openapi/loads
-# github.com/go-openapi/runtime v0.17.0
+# github.com/go-openapi/runtime v0.17.2
 github.com/go-openapi/runtime
 github.com/go-openapi/runtime/flagext
 github.com/go-openapi/runtime/middleware
@@ -69,13 +62,13 @@ github.com/go-openapi/runtime/logger
 github.com/go-openapi/runtime/middleware/denco
 github.com/go-openapi/runtime/middleware/header
 github.com/go-openapi/runtime/middleware/untyped
-# github.com/go-openapi/spec v0.17.0
+# github.com/go-openapi/spec v0.17.2
 github.com/go-openapi/spec
 # github.com/go-openapi/strfmt v0.17.0
 github.com/go-openapi/strfmt
 # github.com/go-openapi/swag v0.17.0
 github.com/go-openapi/swag
-# github.com/go-openapi/validate v0.17.0
+# github.com/go-openapi/validate v0.17.2
 github.com/go-openapi/validate
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
@@ -85,15 +78,6 @@ github.com/golang/snappy
 github.com/google/uuid
 # github.com/jessevdk/go-flags v1.4.0
 github.com/jessevdk/go-flags
-# github.com/jinzhu/gorm v1.9.1
-github.com/jinzhu/gorm
-github.com/jinzhu/gorm/dialects/postgres
-# github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a
-github.com/jinzhu/inflection
-# github.com/lib/pq v1.0.0
-github.com/lib/pq
-github.com/lib/pq/hstore
-github.com/lib/pq/oid
 # github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
@@ -106,8 +90,6 @@ github.com/pborman/uuid
 github.com/rjeczalik/notify
 # github.com/rs/cors v1.6.0
 github.com/rs/cors
-# github.com/satori/go.uuid v1.2.0
-github.com/satori/go.uuid
 # github.com/syndtr/goleveldb v0.0.0-20181012014443-6b91fda63f2e
 github.com/syndtr/goleveldb/leveldb
 github.com/syndtr/goleveldb/leveldb/errors
@@ -123,14 +105,14 @@ github.com/syndtr/goleveldb/leveldb/storage
 github.com/syndtr/goleveldb/leveldb/table
 # github.com/tylerb/graceful v1.2.15
 github.com/tylerb/graceful
-# golang.org/x/crypto v0.0.0-20181012144002-a92615f3c490
+# golang.org/x/crypto v0.0.0-20181029103014-dab2b1051b5d
 golang.org/x/crypto/sha3
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/scrypt
-# golang.org/x/net v0.0.0-20181005035420-146acd28ed58
+# golang.org/x/net v0.0.0-20181011144130-49bb7cea24b1
 golang.org/x/net/websocket
 golang.org/x/net/idna
-# golang.org/x/sys v0.0.0-20180926160741-c2ed4eda69e7
+# golang.org/x/sys v0.0.0-20181026203630-95b1ffbd15a5
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.0
 golang.org/x/text/unicode/norm
