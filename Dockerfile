@@ -9,6 +9,7 @@ ADD vendor /usr/local/go/src
 ADD cmd /go/src/${PROJECT_DIR}/cmd
 ADD models /go/src/${PROJECT_DIR}/models
 ADD restapi /go/src/${PROJECT_DIR}/restapi
+ADD merkle /go/src/${PROJECT_DIR}/merkle
 ADD internal /go/src/${PROJECT_DIR}/internal
 
 WORKDIR /go/src/${PROJECT_DIR}

@@ -5,16 +5,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	rcge "github.com/Magicking/rc-ge-ch-pdf/merkle"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"golang.org/x/crypto/sha3"
 	"io"
 	"io/ioutil"
 	"log"
 	"math/big"
 	"net/http"
 	"strings"
+
+	rcge "github.com/Magicking/rc-ge-validator/merkle"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"golang.org/x/crypto/sha3"
 )
 
 var BEG_DELIM = []byte(":JsOnbegin:")
