@@ -96,3 +96,7 @@ Frameworks & softwares
  - [Docker](https://www.docker.com/)
  - [ChainPoint](https://chainpoint.org)
  - [Caddy](https://caddyserver.com)
+
+Disclaimer
+----------
+L'État de Genève se décharge de toute responsabilité pour toute utilisation de tout ou partie du code, notamment suite à des défauts de programmation.
