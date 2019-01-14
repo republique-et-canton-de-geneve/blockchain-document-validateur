@@ -14,11 +14,7 @@ RUN go build -v -o /go/bin/main /go/src/${PROJECT_DIR}/cmd/${PROJECT_NAME}/main.
 
 FROM alpine:latest
 RUN apk --no-cache add libc6-compat ca-certificates
-ENV PROJECT_DIR github.com/Magicking/rc-ge-validator
-WORKDIR /go/bin/
-COPY --from=builder /go/bin/main .
-ADD run.sh /go/src/${PROJECT_DIR}/
-WORKDIR /go/src/${PROJECT_DIR}
+COPY --from=builder /go/bin/main /go/bin/main
 EXPOSE 8090
-CMD ["./run.sh"]
+CMD ["/go/bin/main","--host","0.0.0.0","--port=8090"]
 
