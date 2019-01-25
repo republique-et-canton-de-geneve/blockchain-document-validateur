@@ -2,6 +2,7 @@ Prototype Proof of Concept Registre du Commerce
 ===============================================
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/lo-enterprise/blockchain-document-validateur)](https://goreportcard.com/report/github.com/lo-enterprise/blockchain-document-validateur)
+[![](https://images.microbadger.com/badges/image/loenterprise/blockchain-document-validateur.svg)](https://microbadger.com/images/loenterprise/blockchain-document-validateur "Get your own image badge on microbadger.com")
 
 ---------
 
