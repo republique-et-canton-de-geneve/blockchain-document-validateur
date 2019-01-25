@@ -1,6 +1,8 @@
 Prototype Proof of Concept Registre du Commerce
 ===============================================
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/lo-enterprise/blockchain-document-validateur)](https://goreportcard.com/report/github.com/lo-enterprise/blockchain-document-validateur)
+
 ---------
 
 I. Backlog
