@@ -1,6 +1,6 @@
 0.0.0.0:80 {
   limits 10mb
-  proxy /api http://rcgechvalidator:8090 {
+  proxy /api http://service:8090 {
     without /api
   }
   rewrite / {
