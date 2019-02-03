@@ -1,0 +1,7 @@
+name: production
+description: A generated Helm Chart for production from Skippbox Kompose
+version: 0.0.1
+keywords:
+  - production
+sources:
+home:

@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file production.yml convert -c
+    kompose.version: 1.17.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: service
+  name: service
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: service
+    spec:
+      containers:
+      - env:
+        - name: LOCKED_ADDR
+          value: 0x37478cade8ba5afac3440f0c6f0817909cc19576
+        - name: WS_URI
+          value: https://mainnet.infura.io/v3/fb46aa9710474cc6ae7a10a9e3e9fdf4
+        image: registry.gitlab.com/lo-enterprise/blockchain-document-validateur/service
+        name: service
+        resources: {}
+      restartPolicy: Always
+status: {}
