@@ -10,10 +10,10 @@ before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
 
 variables:
-  MOCKUP_TEST_IMAGE: registry.gitlab.com/lo-enterprise/blockchain-document-validateur_mockup:$CI_COMMIT_REF_NAME
-  MOCKUP_RELEASE_IMAGE: registry.gitlab.com/lo-enterprise/blockchain-document-validateur_mockup:latest
-  SERVICE_TEST_IMAGE: registry.gitlab.com/lo-enterprise/blockchain-document-validateur_service:$CI_COMMIT_REF_NAME
-  SERVICE_RELEASE_IMAGE: registry.gitlab.com/lo-enterprise/blockchain-document-validateur_service:latest
+  MOCKUP_TEST_IMAGE: registry.gitlab.com/lo-enterprise/blockchain-document-validateur/mockup:$CI_COMMIT_REF_NAME
+  MOCKUP_RELEASE_IMAGE: registry.gitlab.com/lo-enterprise/blockchain-document-validateur/mockup:latest
+  SERVICE_TEST_IMAGE: registry.gitlab.com/lo-enterprise/blockchain-document-validateur/service:$CI_COMMIT_REF_NAME
+  SERVICE_RELEASE_IMAGE: registry.gitlab.com/lo-enterprise/blockchain-document-validateur/service:latest
 
 build_mockup:
   stage: build
