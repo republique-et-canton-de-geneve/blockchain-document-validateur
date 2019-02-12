@@ -12,8 +12,8 @@ import (
 	swag "github.com/go-openapi/swag"
 	graceful "github.com/tylerb/graceful"
 
-	internal "github.com/Magicking/rc-ge-validator/internal"
-	"github.com/Magicking/rc-ge-validator/restapi/operations"
+	internal "github.com/geneva_validateur/internal"
+	"github.com/geneva_validateur/restapi/operations"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten

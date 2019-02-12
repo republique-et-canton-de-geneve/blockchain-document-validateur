@@ -21,7 +21,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	graceful "github.com/tylerb/graceful"
 
-	"github.com/Magicking/rc-ge-validator/restapi/operations"
+	"github.com/geneva_validateur/restapi/operations"
 )
 
 const (
