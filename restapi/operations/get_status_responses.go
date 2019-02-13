@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "github.com/geneva_validateur/models"
+	models "github.com/Magicking/rc-ge-validator/models"
 )
 
 // GetStatusOKCode is the HTTP code returned for type GetStatusOK
