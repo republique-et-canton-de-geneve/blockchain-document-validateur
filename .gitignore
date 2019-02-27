@@ -1,2 +1,10 @@
+*.aux
+*.log
+*.out
+*.nav
+*.pdf
+*.snm
+*.toc
+.idea/
 # SonarQube
 .scannerwork/

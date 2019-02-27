@@ -3,14 +3,13 @@ package restapi
 import (
 	"context"
 	"crypto/tls"
-	"net/http"
-	"strings"
-
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 	swag "github.com/go-openapi/swag"
 	graceful "github.com/tylerb/graceful"
+	"net/http"
+//	"strings"
 
 	internal "github.com/Magicking/rc-ge-validator/internal"
 	"github.com/Magicking/rc-ge-validator/restapi/operations"
@@ -80,6 +79,7 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics
 func setupGlobalMiddleware(ctx context.Context, handler http.Handler) http.Handler {
-	addr := strings.TrimPrefix(ethopts.LockedAddress, "0x")
-	return internal.ValidateHandler(ctx, "/validate", addr, handler)
+	//addr := strings.TrimPrefix(ethopts.LockedAddress, "0x")
+	//return internal.ValidateHandler(ctx, "/validate", addr, handler)
+	return internal.ValidateHandler(ctx, "/validate", ethopts.LockedAddress, handler)
 }

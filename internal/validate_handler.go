@@ -10,6 +10,9 @@ import (
 	"log"
 	"math/big"
 	"net/http"
+	"os"
+
+	//	"os"
 	"strings"
 
 	rcge "github.com/Magicking/rc-ge-validator/merkle"
@@ -202,7 +205,22 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 			http.Error(w, fmt.Sprintf("Could not validate Receipt: %v", err), http.StatusInternalServerError)
 			return
 		}
-		if from != lockedAddress {
+
+		var fromIsValid bool
+		fromIsValid = false
+
+		pubKeys := os.Getenv("LOCKED_ADDR")
+		pubKeysArr := strings.Split(pubKeys, ",")
+
+		for _, address := range pubKeysArr {
+			if strings.TrimPrefix(address, "0x") == from {
+				fromIsValid = true
+				break
+			}
+		}
+
+		//if from != lockedAddress {
+		if !fromIsValid {
 			http.Error(w, fmt.Sprintf("Invalid receipt, could not valid submitter"), http.StatusInternalServerError)
 			return
 		}
