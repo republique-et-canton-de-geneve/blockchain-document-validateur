@@ -142,13 +142,6 @@ func ExtractJson(r io.Reader) ([]byte, error) {
 }
 
 func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler http.Handler) http.Handler {
-	pvtKs := os.Getenv("LOCKED_ADDR")
-	fmt.Println(pvtKs)
-	pvtkArr := strings.Split(pvtKs, ",")
-	pvtkArr[0] = strings.TrimPrefix(pvtkArr[0], "0x")
-	pvtkArr[1] = strings.TrimPrefix(pvtkArr[1], "0x")
-	fmt.Println(pvtkArr[0], pvtkArr[1])
-
 	middle := func(w http.ResponseWriter, r *http.Request) {
 		if !strings.HasPrefix(r.URL.Path, prefix) {
 			handler.ServeHTTP(w, r)
@@ -212,8 +205,22 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 			http.Error(w, fmt.Sprintf("Could not validate Receipt: %v", err), http.StatusInternalServerError)
 			return
 		}
+
+		var fromIsValid bool
+		fromIsValid = false
+
+		pubKeys := os.Getenv("LOCKED_ADDR")
+		pubKeysArr := strings.Split(pubKeys, ",")
+
+		for _, address := range pubKeysArr {
+			if strings.TrimPrefix(address, "0x") == from {
+				fromIsValid = true
+				break
+			}
+		}
+
 		//if from != lockedAddress {
-		if from != pvtkArr[0] && from != pvtkArr[1]{
+		if !fromIsValid {
 			http.Error(w, fmt.Sprintf("Invalid receipt, could not valid submitter"), http.StatusInternalServerError)
 			return
 		}
