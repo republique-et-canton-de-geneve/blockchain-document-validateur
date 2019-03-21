@@ -31,7 +31,30 @@ paths:
                     description: Internal error
                     schema:
                         $ref: '#/definitions/Error'
+    /sonde:
+        get:
+            summary: Retourne un flag correspondant à la bonne connexion à un noeud Infura.
+            operationId: monitoring
+            description: |
+                Retourne un flag correspondant à la bonne connexion à un noeud Infura.
+            responses:
+                200:
+                    description: |
+                        Tout est en ordre et fonctionne correctement.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Sonde'
+                default:
+                    description: Internal error
+                    schema:
+                        $ref: '#/definitions/Error'
 definitions:
+    Sonde:
+        type: object
+        properties:
+            ethereumActive:
+                type: boolean
     Informations:
         type: object
         properties:

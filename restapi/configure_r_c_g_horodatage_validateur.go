@@ -7,21 +7,22 @@ import (
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 	swag "github.com/go-openapi/swag"
-	graceful "github.com/tylerb/graceful"
+//	graceful "github.com/tylerb/graceful"
 	"net/http"
 //	"strings"
 
-	internal "github.com/Magicking/rc-ge-validator/internal"
-	"github.com/Magicking/rc-ge-validator/restapi/operations"
+	internal "github.com/geneva_validateur/internal"
+	"github.com/geneva_validateur/restapi/operations"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten
 
-//go:generate swagger generate server --target .. --name  --spec ../docs/rc-ge-validator.yml
+//go:generate swagger generate server --target .. --spec ../docs/rc-ge-validator.yml
 
 var ethopts struct {
 	WsURI         string `long:"ws-uri" env:"WS_URI" description:"Ethereum WS URI (e.g: ws://HOST:8546)"`
 	LockedAddress string `long:"locked-addr" env:"LOCKED_ADDR" description:"Ethereum address of the sole verifier (anchor emitter)"`
+	PrivateKey	string `long:"pkey" env:"PRIVATE_KEY" description:"hex encoded private key"`
 }
 
 func configureFlags(api *operations.RCGHorodatageValidateurAPI) {
@@ -44,6 +45,8 @@ func configureAPI(api *operations.RCGHorodatageValidateurAPI) http.Handler {
 	// s.api.Logger = log.Printf
 
 	ctx := internal.NewCCToContext(context.Background(), ethopts.WsURI)
+	ctx = internal.NewBLKToContext(ctx, ethopts.WsURI, ethopts.PrivateKey)
+	ctx = internal.NewMonitoringToContext(ctx, ethopts.WsURI, ethopts.LockedAddress, ethopts.PrivateKey)
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
@@ -51,6 +54,9 @@ func configureAPI(api *operations.RCGHorodatageValidateurAPI) http.Handler {
 
 	api.GetStatusHandler = operations.GetStatusHandlerFunc(func(params operations.GetStatusParams) middleware.Responder {
 		return middleware.NotImplemented("operation .GetStatus has not yet been implemented")
+	})
+	api.MonitoringHandler = operations.MonitoringHandlerFunc(func(params operations.MonitoringParams) middleware.Responder {
+		return internal.MonitoringHandler(ctx, params)
 	})
 
 	api.ServerShutdown = func() {}
@@ -67,7 +73,7 @@ func configureTLS(tlsConfig *tls.Config) {
 // If you need to modify a config, store server instance to stop it individually later, this is the place.
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix"
-func configureServer(s *graceful.Server, scheme, addr string) {
+func configureServer(s *http.Server, scheme, addr string) {
 }
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
