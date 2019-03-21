@@ -11,6 +11,7 @@ type key int
 
 var blkKey key = 1
 var ethRpcKey key = 2
+var monitoringKey key = 3
 
 func NewCCToContext(ctx context.Context, wsURI string) context.Context {
 	cc, err := blktk.NewClientConnector(wsURI, 3)
@@ -36,4 +37,17 @@ func NewBLKToContext(ctx context.Context, wsURI, privateKey string) context.Cont
 func BLKFromContext(ctx context.Context) (*blktk.BlockchainContext, bool) {
 	blk, ok := ctx.Value(blkKey).(*blktk.BlockchainContext)
 	return blk, ok
+}
+
+func NewMonitoringToContext(ctx context.Context, nodeAddress string, lockedAddress string, privateKey string) context.Context {
+	mn := InitMonitoring(nodeAddress, lockedAddress, privateKey)
+	if (MonitoringEnv{}) == mn {
+		log.Fatalf("Could not initialize monitoring cont: %v", mn)
+	}
+	return context.WithValue(ctx, monitoringKey, mn)
+}
+
+func MonitoringFromContext(ctx context.Context) (MonitoringEnv, bool) {
+	mn, ok := ctx.Value(monitoringKey).(MonitoringEnv)
+	return mn, ok
 }

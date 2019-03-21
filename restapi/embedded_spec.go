@@ -31,6 +31,30 @@ func init() {
     "version": "0.1.0"
   },
   "paths": {
+    "/sonde": {
+      "get": {
+        "description": "Retourne un flag correspondant à la bonne connexion à un noeud Infura.\n",
+        "summary": "Retourne un flag correspondant à la bonne connexion à un noeud Infura.",
+        "operationId": "monitoring",
+        "responses": {
+          "200": {
+            "description": "Tout est en ordre et fonctionne correctement.\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Sonde"
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/status": {
       "get": {
         "description": "Retourne divers informations par le service\n",
@@ -78,6 +102,14 @@ func init() {
       "properties": {
         "locked_key": {
           "type": "string"
+        }
+      }
+    },
+    "Sonde": {
+      "type": "object",
+      "properties": {
+        "ethereumActive": {
+          "type": "boolean"
         }
       }
     }
@@ -97,6 +129,30 @@ func init() {
     "version": "0.1.0"
   },
   "paths": {
+    "/sonde": {
+      "get": {
+        "description": "Retourne un flag correspondant à la bonne connexion à un noeud Infura.\n",
+        "summary": "Retourne un flag correspondant à la bonne connexion à un noeud Infura.",
+        "operationId": "monitoring",
+        "responses": {
+          "200": {
+            "description": "Tout est en ordre et fonctionne correctement.\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Sonde"
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/status": {
       "get": {
         "description": "Retourne divers informations par le service\n",
@@ -144,6 +200,14 @@ func init() {
       "properties": {
         "locked_key": {
           "type": "string"
+        }
+      }
+    },
+    "Sonde": {
+      "type": "object",
+      "properties": {
+        "ethereumActive": {
+          "type": "boolean"
         }
       }
     }
