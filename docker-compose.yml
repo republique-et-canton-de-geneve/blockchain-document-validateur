@@ -3,7 +3,6 @@ services:
   rcgechvalidator:
     build: .
     environment:
-      - WS_URI=https://rinkeby.infura.io/v3/afeacc980c634655875d915ed65cb0e4
       - LOCKED_ADDR=0x533a245f03a1a46cacb933a3beef752fd8ff45c3,0x3ab05401c0d9483dbeb108b741248bb8e82e323d,0x88ab30749e745a66262275e0489373d3e0781e74
 
   caddy-rev:
@@ -13,3 +12,11 @@ services:
     volumes:
       - "./Caddyfile:/etc/Caddyfile:ro"
       - "./mockup:/var/www:ro"
+
+  nginx:
+    image: nginx
+    container_name: nginx.validateur
+    ports:
+      - 8080:8080
+    volumes:
+      - "./nginx/nginx-dev.conf:/etc/nginx/nginx.conf"
