@@ -10,6 +10,7 @@ import (
 )
 
 func MonitoringHandler(ctx context.Context, params op.MonitoringParams) middleware.Responder {
+
 	nodeOk := GetNodeSignal(ctx)
 
 	var sondeResp []*models.Sonde

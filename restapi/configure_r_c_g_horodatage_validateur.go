@@ -7,12 +7,10 @@ import (
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 	swag "github.com/go-openapi/swag"
-//	graceful "github.com/tylerb/graceful"
 	"net/http"
 //	"strings"
-
 	internal "github.com/geneva_validateur/internal"
-	"github.com/geneva_validateur/restapi/operations"
+	operations "github.com/geneva_validateur/restapi/operations"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten
@@ -47,7 +45,6 @@ func configureAPI(api *operations.RCGHorodatageValidateurAPI) http.Handler {
 	ctx := internal.NewCCToContext(context.Background(), ethopts.WsURI)
 	ctx = internal.NewBLKToContext(ctx, ethopts.WsURI, ethopts.PrivateKey)
 	ctx = internal.NewMonitoringToContext(ctx, ethopts.WsURI, ethopts.LockedAddress, ethopts.PrivateKey)
-
 	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()

@@ -16,7 +16,7 @@ import (
 type Sonde struct {
 
 	// ethereum active
-	EthereumActive bool `json:"ethereumActive,omitempty"`
+	EthereumActive bool `json:"ethereumActive"`
 }
 
 // Validate validates this sonde
