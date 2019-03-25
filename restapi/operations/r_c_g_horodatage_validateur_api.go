@@ -40,6 +40,9 @@ func NewRCGHorodatageValidateurAPI(spec *loads.Document) *RCGHorodatageValidateu
 		GetStatusHandler: GetStatusHandlerFunc(func(params GetStatusParams) middleware.Responder {
 			return middleware.NotImplemented("operation GetStatus has not yet been implemented")
 		}),
+		MonitoringHandler: MonitoringHandlerFunc(func(params MonitoringParams) middleware.Responder {
+			return middleware.NotImplemented("operation Monitoring has not yet been implemented")
+		}),
 	}
 }
 
@@ -81,6 +84,8 @@ type RCGHorodatageValidateurAPI struct {
 
 	// GetStatusHandler sets the operation handler for the get status operation
 	GetStatusHandler GetStatusHandler
+	// MonitoringHandler sets the operation handler for the monitoring operation
+	MonitoringHandler MonitoringHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -146,6 +151,10 @@ func (o *RCGHorodatageValidateurAPI) Validate() error {
 
 	if o.GetStatusHandler == nil {
 		unregistered = append(unregistered, "GetStatusHandler")
+	}
+
+	if o.MonitoringHandler == nil {
+		unregistered = append(unregistered, "MonitoringHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -250,6 +259,11 @@ func (o *RCGHorodatageValidateurAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/status"] = NewGetStatus(o.context, o.GetStatusHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/sonde"] = NewMonitoring(o.context, o.MonitoringHandler)
 
 }
 

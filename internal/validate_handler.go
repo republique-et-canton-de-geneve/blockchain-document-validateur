@@ -15,7 +15,7 @@ import (
 	//	"os"
 	"strings"
 
-	rcge "github.com/Magicking/rc-ge-validator/merkle"
+	rcge "github.com/geneva_validateur/merkle"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"golang.org/x/crypto/sha3"
