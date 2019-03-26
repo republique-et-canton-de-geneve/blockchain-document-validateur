@@ -1,0 +1,38 @@
+version: '2'
+services:
+  rcgechvalidator:
+    build:
+      context: ./validateur_api
+      dockerfile: Dockerfile
+    environment:
+      - WS_URI=http://nginx.validateur:8080
+      - LOCKED_ADDR=0x533a245f03a1a46cacb933a3beef752fd8ff45c3,0x3ab05401c0d9483dbeb108b741248bb8e82e323d,0x88ab30749e745a66262275e0489373d3e0781e74
+      - PRIVATE_KEY=156EBD7263D4AF20DB24CC2B563B4711A9F55BC133F6EA3403F1F4B4FEC48B16
+    command: bash -c "go get github.com/pilu/fresh && fresh"
+    depends_on:
+      - nginx.validateur
+    volumes:
+      - ./validateur_api:/go/src/github.com/geneva_validateur/
+    ports:
+      - "0.0.0.0:8090:8090"
+
+  webapp:
+    build:
+      context: ./validateur_webapp
+    ports:
+      - "0.0.0.0:8001:8080" #8001 cause geneve has only whitelisted that port
+
+  postgres:
+    image: postgres:9.5
+    environment:
+      - POSTGRES_USER=tsUhfmkMfY
+      - POSTGRES_PASSWORD=lrwOuiz4gH
+      - POSTGRES_DB=rcgehorodatage
+
+  nginx.validateur:
+    image: nginx
+    container_name: nginx.validateur
+    ports:
+      - 8080:8080
+    volumes:
+      - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
