@@ -11,6 +11,8 @@ import (
 	"math/big"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	//	"os"
 	"strings"
@@ -212,8 +214,16 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 		pubKeys := os.Getenv("LOCKED_ADDR")
 		pubKeysArr := strings.Split(pubKeys, ",")
 
-		for _, address := range pubKeysArr {
+		timestampPubKeys := os.Getenv("TIMEOUT")
+		timestampArr := strings.Split(timestampPubKeys, ",")
+
+		for i, address := range pubKeysArr {
 			if strings.TrimPrefix(address, "0x") == from {
+				number, _ := strconv.Atoi(timestampArr[i])
+				if int64(number) <= time.Now().Unix() {
+					fromIsValid = false
+					break
+				}
 				fromIsValid = true
 				break
 			}
