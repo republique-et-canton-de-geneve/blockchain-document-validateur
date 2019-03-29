@@ -28,13 +28,9 @@ services:
       - API_HOST=rcgechvalidator:8090 # API host, is equal to the <api container name>:<port>
     working_dir: /go/src/github.com/geneva_horodateur
     command: bash -c "go build -v -o /go/bin/main ./main.go && /go/bin/main"
-
-  postgres:
-    image: postgres:9.5
-    environment:
-      - POSTGRES_USER=tsUhfmkMfY
-      - POSTGRES_PASSWORD=lrwOuiz4gH
-      - POSTGRES_DB=rcgehorodatage
+    volumes:
+      - "./myservice.cert:/go/src/github.com/geneva_horodateur/myservice.cert"
+      - "./myservice.key:/go/src/github.com/geneva_horodateur/myservice.key"
 
   nginx.validateur:
     image: nginx

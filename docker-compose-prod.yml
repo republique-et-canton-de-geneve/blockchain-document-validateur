@@ -18,3 +18,6 @@ services:
       - API_HOST=rcgechvalidator:8090 # API host, is equal to the <api container name>:<port>
     working_dir: /go/src/github.com/geneva_horodateur
     command: bash -c "go build -v -o /go/bin/main ./main.go && /go/bin/main"
+    volumes:
+      - "./myservice.cert:/go/src/github.com/geneva_horodateur/myservice.cert"
+      - "./myservice.key:/go/src/github.com/geneva_horodateur/myservice.key"
