@@ -54,9 +54,9 @@ github.com/go-openapi/jsonreference
 # github.com/go-openapi/loads v0.17.2
 github.com/go-openapi/loads
 # github.com/go-openapi/runtime v0.17.2
+github.com/go-openapi/runtime/middleware
 github.com/go-openapi/runtime
 github.com/go-openapi/runtime/flagext
-github.com/go-openapi/runtime/middleware
 github.com/go-openapi/runtime/security
 github.com/go-openapi/runtime/logger
 github.com/go-openapi/runtime/middleware/denco
@@ -103,8 +103,6 @@ github.com/syndtr/goleveldb/leveldb/journal
 github.com/syndtr/goleveldb/leveldb/memdb
 github.com/syndtr/goleveldb/leveldb/storage
 github.com/syndtr/goleveldb/leveldb/table
-# github.com/tylerb/graceful v1.2.15
-github.com/tylerb/graceful
 # golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 golang.org/x/crypto/sha3
 golang.org/x/crypto/pbkdf2
