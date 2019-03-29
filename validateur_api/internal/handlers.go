@@ -10,11 +10,13 @@ import (
 )
 
 func MonitoringHandler(ctx context.Context, params op.MonitoringParams) middleware.Responder {
-
+	// Check up Node signal and return false if ctx cannot connect
 	nodeOk := GetNodeSignal(ctx)
 
-	var sondeResp []*models.Sonde
-	sondeResp_rcpt := models.Sonde{EthereumActive: nodeOk}
-	sondeResp = append(sondeResp, &sondeResp_rcpt)
-	return op.NewMonitoringOK().WithPayload(sondeResp)
+	var sonde []*models.Sonde
+
+	sonde_res := models.Sonde{EthereumActive: nodeOk}
+	sonde = append(sonde, &sonde_res)
+
+	return op.NewMonitoringOK().WithPayload(sonde)
 }
