@@ -26,6 +26,8 @@ services:
       - IDP_METADATA=http://ec2-18-184-234-216.eu-central-1.compute.amazonaws.com/ssorec.geneveid.ch_dgsi_blockchain.xml #Public URL where IdP can be found
       - SP_URL=http://ec2-18-184-234-216.eu-central-1.compute.amazonaws.com:8001 # URL of the service provider
       - API_HOST=rcgechvalidator:8090 # API host, is equal to the <api container name>:<port>
+    working_dir: /go/src/github.com/geneva_horodateur
+    command: bash -c "go build -v -o /go/bin/main ./main.go && /go/bin/main"
 
   postgres:
     image: postgres:9.5
@@ -41,3 +43,4 @@ services:
       - 8080:8080
     volumes:
       - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
+
