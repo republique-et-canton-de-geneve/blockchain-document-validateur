@@ -46,8 +46,7 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	indexToServe := path
 
-	log.Println("path", path)
-
+	// Switch to handle different languages
 	switch path {
 	case "":
 		indexToServe = "index.fr.html"
@@ -63,10 +62,13 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	_, err := ioutil.ReadFile("mockup/"+string(indexToServe))
 
+	// If indexToServe is a valid file then return the file
+	// Otherwise serve API if uri == /api/*
+	// Finally redirect if incorrect request
 	if err == nil {
 		http.ServeFile(w, r, "mockup/"+string(indexToServe))
 	} else if strings.Split(path, "/")[0] == "api" {
-		r.URL.Path = strings.TrimLeft(r.URL.Path, "api/")
+		r.URL.Path = strings.TrimLeft(r.URL.Path, "api/") // Remove api from uri
 
 		apiHost := os.Getenv("API_HOST")
 
@@ -81,18 +83,18 @@ func main() {
 
 	keyPair, err := tls.LoadX509KeyPair(keyName+".cert", keyName+".key")
 	if err != nil {
-		log.Fatal(err) // TODO handle error
+		log.Fatal(err)
 	}
 	keyPair.Leaf, err = x509.ParseCertificate(keyPair.Certificate[0])
 	if err != nil {
-		log.Fatal(err) // TODO handle error
+		log.Fatal(err)
 	}
 
 	idpEnv := os.Getenv("IDP_METADATA")
 
 	idpMetadataURL, err := url.Parse(idpEnv)
 	if err != nil {
-		log.Fatal(err) // TODO handle error
+		log.Fatal(err)
 	}
 
 	spEnv := os.Getenv("SP_URL")
@@ -100,7 +102,7 @@ func main() {
 
 	rootURL, err := url.Parse(spEnv)
 	if err != nil {
-		log.Fatal(err) // TODO handle error
+		log.Fatal(err)
 	}
 
 	samlSP, _ := samlsp.New(samlsp.Options{
@@ -110,7 +112,10 @@ func main() {
 		IDPMetadataURL: idpMetadataURL,
 	})
 
+	// This is where the SAML package will open information about SP to the world
 	http.Handle("/saml/", samlSP)
+
+	// Main Gateway to Webapp & API, it needs SAML login
 	http.Handle("/", samlSP.RequireAccount(http.HandlerFunc(new(RouteHandler).ServeHTTP)))
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
