@@ -40,9 +40,10 @@ func GetNodeSignal(ctx context.Context) bool {
 	return true
 }
 
-func InitMonitoring(nodeAddress string, lockedAddress string, privateKey string) MonitoringEnv {
-	mn = MonitoringEnv{NodeAddress: nodeAddress,
+func InitMonitoring(nodeAddress string, lockedAddress string) MonitoringEnv {
+	mn = MonitoringEnv{
+		NodeAddress: nodeAddress,
 		LockedAddress: lockedAddress,
-		PrivateKey:    privateKey}
+	}
 	return mn
 }

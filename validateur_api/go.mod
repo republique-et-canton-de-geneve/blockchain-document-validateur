@@ -29,7 +29,7 @@ require (
 	github.com/rjeczalik/notify v0.9.2 // indirect
 	github.com/rs/cors v1.6.0 // indirect
 	github.com/syndtr/goleveldb v0.0.0-20181012014443-6b91fda63f2e // indirect
-	github.com/tylerb/graceful v1.2.15 // indirect
+	github.com/tylerb/graceful v1.2.15
 	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 	golang.org/x/net v0.0.0-20190320064053-1272bf9dcd53
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect

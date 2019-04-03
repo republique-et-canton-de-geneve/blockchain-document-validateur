@@ -20,7 +20,6 @@ import (
 var ethopts struct {
 	WsURI         string `long:"ws-uri" env:"WS_URI" description:"Ethereum WS URI (e.g: ws://HOST:8546)"`
 	LockedAddress string `long:"locked-addr" env:"LOCKED_ADDR" description:"Ethereum address of the sole verifier (anchor emitter)"`
-	PrivateKey	string `long:"pkey" env:"PRIVATE_KEY" description:"hex encoded private key"`
 }
 
 func configureFlags(api *operations.RCGHorodatageValidateurAPI) {
@@ -43,8 +42,7 @@ func configureAPI(api *operations.RCGHorodatageValidateurAPI) http.Handler {
 	// s.api.Logger = log.Printf
 
 	ctx := internal.NewCCToContext(context.Background(), ethopts.WsURI)
-	ctx = internal.NewBLKToContext(ctx, ethopts.WsURI, ethopts.PrivateKey)
-	ctx = internal.NewMonitoringToContext(ctx, ethopts.WsURI, ethopts.LockedAddress, ethopts.PrivateKey)
+	ctx = internal.NewMonitoringToContext(ctx, ethopts.WsURI, ethopts.LockedAddress)
 	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()
