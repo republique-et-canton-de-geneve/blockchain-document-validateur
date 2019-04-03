@@ -1,10 +1,6 @@
 package main
 
 import (
-	"crypto/rsa"
-	"crypto/tls"
-	"crypto/x509"
-	"github.com/crewjam/saml/samlsp"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -79,44 +75,8 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	keyName := os.Getenv("KEY_NAME")
-
-	keyPair, err := tls.LoadX509KeyPair(keyName+".cert", keyName+".key")
-	if err != nil {
-		log.Fatal(err)
-	}
-	keyPair.Leaf, err = x509.ParseCertificate(keyPair.Certificate[0])
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	idpEnv := os.Getenv("IDP_METADATA")
-
-	idpMetadataURL, err := url.Parse(idpEnv)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	spEnv := os.Getenv("SP_URL")
-
-
-	rootURL, err := url.Parse(spEnv)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	samlSP, _ := samlsp.New(samlsp.Options{
-		URL:            *rootURL,
-		Key:            keyPair.PrivateKey.(*rsa.PrivateKey),
-		Certificate:    keyPair.Leaf,
-		IDPMetadataURL: idpMetadataURL,
-	})
-
-	// This is where the SAML package will open information about SP to the world
-	http.Handle("/saml/", samlSP)
-
 	// Main Gateway to Webapp & API, it needs SAML login
-	http.Handle("/", samlSP.RequireAccount(http.HandlerFunc(new(RouteHandler).ServeHTTP)))
+	http.Handle("/", http.HandlerFunc(new(RouteHandler).ServeHTTP))
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
