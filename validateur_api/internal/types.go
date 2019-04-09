@@ -39,8 +39,8 @@ func BLKFromContext(ctx context.Context) (*blktk.BlockchainContext, bool) {
 	return blk, ok
 }
 
-func NewMonitoringToContext(ctx context.Context, nodeAddress string, lockedAddress string, privateKey string) context.Context {
-	mn := InitMonitoring(nodeAddress, lockedAddress, privateKey)
+func NewMonitoringToContext(ctx context.Context, nodeAddress string, lockedAddress string) context.Context {
+	mn := InitMonitoring(nodeAddress, lockedAddress)
 	if (MonitoringEnv{}) == mn {
 		log.Fatalf("Could not initialize monitoring cont: %v", mn)
 	}

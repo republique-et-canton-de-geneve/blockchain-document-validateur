@@ -1,42 +1,80 @@
 version: '2'
 services:
-  rcgechvalidator:
+  rcgechvalidator1:
     build:
       context: ./validateur_api
       dockerfile: Dockerfile
     environment:
-      - WS_URI=http://nginx.validateur:8080
+      - WS_URI=https://rinkeby.infura.io/v3/3915211d82c546beaf5336b3c9b9b99a
       - LOCKED_ADDR=0x533a245f03a1a46cacb933a3beef752fd8ff45c3,0x3ab05401c0d9483dbeb108b741248bb8e82e323d,0x88ab30749e745a66262275e0489373d3e0781e74
-      - PRIVATE_KEY=156EBD7263D4AF20DB24CC2B563B4711A9F55BC133F6EA3403F1F4B4FEC48B16
-    command: bash -c "go get github.com/pilu/fresh && fresh"
-    depends_on:
-      - nginx.validateur
-    volumes:
-      - ./validateur_api:/go/src/github.com/geneva_validateur/
-    ports:
-      - "0.0.0.0:8090:8090"
+      - TIMEOUT=1653618789,1653618789,1653618789
+      - http_proxy=http://squid.forward:3128
+      - https_proxy=http://squid.forward:3128
+    working_dir: /app
+    command: "/app/api --host 0.0.0.0 --port=8090"
 
-  webapp:
+  rcgechvalidator2:
+    build:
+      context: ./validateur_api
+      dockerfile: Dockerfile
+    environment:
+      - WS_URI=https://rinkeby.infura.io/v3/3915211d82c546beaf5336b3c9b9b99a
+      - LOCKED_ADDR=0x533a245f03a1a46cacb933a3beef752fd8ff45c3,0x3ab05401c0d9483dbeb108b741248bb8e82e323d,0x88ab30749e745a66262275e0489373d3e0781e74
+      - TIMEOUT=1653618789,1653618789,1653618789
+      - http_proxy=http://squid.forward:3128
+      - https_proxy=http://squid.forward:3128
+    working_dir: /app
+    command: "/app/api --host 0.0.0.0 --port=8090"
+
+  webapp1:
     build:
       context: ./validateur_webapp
-    ports:
-      - "0.0.0.0:8001:8080"
     environment:
       - KEY_NAME=myservice # The .cert and .key must have the same name
       - IDP_METADATA=http://ec2-18-184-234-216.eu-central-1.compute.amazonaws.com/ssorec.geneveid.ch_dgsi_blockchain.xml #Public URL where IdP can be found
       - SP_URL=http://ec2-18-184-234-216.eu-central-1.compute.amazonaws.com:8001 # URL of the service provider
-      - API_HOST=rcgechvalidator:8090 # API host, is equal to the <api container name>:<port>
-    working_dir: /go/src/github.com/geneva_horodateur
-    command: bash -c "go build -v -o /go/bin/main ./main.go && /go/bin/main"
+      - API_HOST=rcgechvalidator1:8090 # API host, is equal to the <api container name>:<port>
+      - MAIN_URI=ctivalidator
+    working_dir: /app
+    command: /app/webapp
     volumes:
-      - "./myservice.cert:/go/src/github.com/geneva_horodateur/myservice.cert"
-      - "./myservice.key:/go/src/github.com/geneva_horodateur/myservice.key"
+      - "./myservice.cert:/app/myservice.cert"
+      - "./myservice.key:/app/myservice.key"
 
-  nginx.validateur:
+  webapp2:
+    build:
+      context: ./validateur_webapp
+    environment:
+      - KEY_NAME=myservice # The .cert and .key must have the same name
+      - IDP_METADATA=http://ec2-18-184-234-216.eu-central-1.compute.amazonaws.com/ssorec.geneveid.ch_dgsi_blockchain.xml #Public URL where IdP can be found
+      - SP_URL=http://ec2-18-184-234-216.eu-central-1.compute.amazonaws.com:8001 # URL of the service provider
+      - API_HOST=rcgechvalidator2:8090 # API host, is equal to the <api container name>:<port>
+      - MAIN_URI=ctivalidator
+    working_dir: /app
+    command: /app/webapp
+    volumes:
+      - "./myservice.cert:/app/myservice.cert"
+      - "./myservice.key:/app/myservice.key"
+
+  nginx.infura:
     image: nginx
-    container_name: nginx.validateur
-    ports:
-      - 8080:8080
+    container_name: nginx.infura
     volumes:
       - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
+
+  nginx.balancer:
+    image: nginx
+    container_name: nginx.balancer
+    links:
+      - webapp1
+      - webapp2
+    volumes:
+      - "./nginx/nginx-balancer.conf:/etc/nginx/nginx.conf"
+    ports:
+      - "0.0.0.0:8001:8080"
+
+  squid.forward:
+    image: wernight/squid
+    container_name: squid.forward
+
 

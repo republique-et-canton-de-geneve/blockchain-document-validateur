@@ -60,7 +60,9 @@ func getData(ctx context.Context, hash common.Hash) ([]byte, *big.Int, string, e
 	if !ok {
 		log.Fatalf("Could not obtain ClientConnector from context\n")
 	}
+
 	tx, hdr_hash, err := ccCtx.TransactionByHashFull(context.TODO(), hash)
+	log.Println(tx, hdr_hash, err)
 	if err != nil {
 		return nil, nil, "", fmt.Errorf("ccCtx.TransactionByHashFull: %v\n", err)
 	}
@@ -103,7 +105,9 @@ func validateReceipt(ctx context.Context, receipt *rcge.Chainpoint, hash common.
 	for _, v := range receipt.Anchors {
 		if v.Type == "ETHData" {
 			sourceId := common.HexToHash(v.SourceID)
+			log.Println(ctx, sourceId)
 			data, anchor_date, from, err := getData(ctx, sourceId)
+			log.Println(data, anchor_date, from, err)
 			log.Printf("anchor_date: %v, from: %v", anchor_date, from)
 			if err != nil {
 				return nil, "", fmt.Errorf("The transaction inexistent: %v\nTx hash: %s\n", err, v.SourceID)

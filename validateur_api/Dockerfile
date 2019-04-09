@@ -1,5 +1,5 @@
-FROM golang
-MAINTAINER Sylvain Laurent
+FROM golang:alpine AS build-env
+
 
 ENV GOBIN $GOPATH/bin
 ENV PROJECT_DIR github.com/geneva_validateur/
@@ -12,10 +12,21 @@ ADD restapi /go/src/${PROJECT_DIR}/restapi
 ADD merkle /go/src/${PROJECT_DIR}/merkle
 ADD internal /go/src/${PROJECT_DIR}/internal
 
-WORKDIR /go/src/${PROJECT_DIR}
+RUN apk add build-base
 
-RUN go build -v -o /go/bin/main /go/src/${PROJECT_DIR}/cmd/${PROJECT_NAME}/main.go
-ADD run.sh /go/src/${PROJECT_DIR}/
-ENTRYPOINT /go/src/${PROJECT_DIR}/run.sh
+WORKDIR /go/src/${PROJECT_DIR}/cmd/r-c-g-horodatage-validateur-server/
+RUN go build -o api
+
+
+FROM alpine
+
+RUN apk update \
+        && apk upgrade \
+        && apk add --no-cache \
+        ca-certificates \
+        && update-ca-certificates 2>/dev/null || true
+
+WORKDIR /app
+COPY --from=build-env /go/src/github.com/geneva_validateur/cmd/r-c-g-horodatage-validateur-server/api /app/
 
 EXPOSE 8090
