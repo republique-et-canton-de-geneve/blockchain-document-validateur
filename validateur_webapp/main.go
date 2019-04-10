@@ -75,7 +75,7 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "mockup/"+string(indexToServe))
 	} else if strings.Split(path, "/")[0] == "api" {
 		r.URL.Path = "/"+strings.TrimPrefix(r.URL.Path, "/"+mainURI+"/api/") // Remove api from uri
-		log.Println(r.URL.Path)
+
 		apiHost := os.Getenv("API_HOST")
 
 		serveReverseProxy("http://"+apiHost, w, r)

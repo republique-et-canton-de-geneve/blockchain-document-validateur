@@ -56,12 +56,6 @@ services:
       - "./myservice.cert:/app/myservice.cert"
       - "./myservice.key:/app/myservice.key"
 
-  nginx.infura:
-    image: nginx
-    container_name: nginx.infura
-    volumes:
-      - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
-
   nginx.balancer:
     image: nginx
     container_name: nginx.balancer
