@@ -1,102 +1,70 @@
-Prototype Proof of Concept Registre du Commerce
-===============================================
 
----------
+# Prototype Registre du Commerce
 
-I. Backlog
---------------
-Interface de génération d'extrait
---------------------------------
- - Interface de téléversement des extraits.
- => Cette interface permet le téléversement d'extrait et téléchargement de reçu au format PDF ainsi que la signature et l'horodatage des extraits.
- 
- Interface de validation d'extrait
---------------------------------
- - Interface de téléversement d'extrait et reçu.
- => Cette interface permet le téléversement d'extrait et reçu au format PDF et indique en retour la validité.
- La validité est défini par le fait que le reçu corresponde à l'extrait et que le signataire de la transaction Ethereum est bien celle défini dans le backend de validation (ici, le registre du commerce).
 
-II. Documentation technique
---------------------------------
 
-Interfaces
-------------
-Dans le cadre du PoC les interfaces sont des écrans web accessible via un navigateur de type Chrome ou Firefox.
+## I. Backlog
 
-Horodateur:
+## Extract Generation Interface
 
-L'envoi des extraits[^extrait] se fait via un téléversement par l'officier public sur l'interface, une fois les extraits téléversés, il est possible de télécharger le reçu de la signature+horodatage[^trustedtimestamping] des-dit extraits.
+This interface allows upload an extract and proceed with a trusted timestamping of these extract and provide a PDF receipt as a proof. Trusted timestamping, is the process of securely keeping track of the creation and modification time of a document. Security here means that no one—not even the owner of the document—should be able to change it once it has been recorded provided that the timestamper's integrity is never compromised.
 
-[^extrait]: Il a été déterminé que que les extraits ne peuvent venir uniquement de la base de donnée interne du registre du commerce car la base de donnée publique n'est pas mis à jour en temps réel.
+## II. Technical Documentation
 
-[^trustedtimestamping]: https://en.wikipedia.org/wiki/Trusted_timestamping
+## Interfaces
 
-Validateur:
+As part of the PoC, the front is a web screens accessible via a browser type Chrome or Firefox.
 
-L'envoi des extraits et reçus se fait via un téléversement par un utilisateur sur l'interface, en retour un message clair de couleur vert indique si l'horodatage est confirmé ou par un message sur fond rouge si la validation de l'horodatage a échoué.
+-   **Validator**:
 
-Backend
--------
-Les backends sont séparés en deux micro-service, un horodateur qui possède la clef privé et le validateur qui est verrouillé sur l'adresse issu de la clef privé de l'horodateur.
-Ces deux paramètres sont néanmoins distincts et configurables.
-Les fonctionnalités de l'interfaces sont volontairement minimal afin d'être conçu comme une brique simple se reposant sur les backends.
-Les backends s'interface avec la blockchain et les différentes transactions qui sont émis sur celle-ci et aura la gestion des clefs associés à ceux-ci (émission/signature de transaction, gestion des identités blockchain, émission de reçu, ...).
-Une Application Programming Interface (API) expose les différentes fonctionnalités, une documentation peut-être fournis au format html.
+The sending of the extracts and receipts is done via an upload by a user on the interface, in return a clear message of green color indicates if the timestamp is confirmed or by a message on a red background if the validation of the timestamp has failed.
 
-ChainPoint 2.1[^chainpoint] est la technologie implémenté car plus rapide pour les besoin PoC, il est néanmoins à noter qu'il existe des alternatives en cours de développement de type ChainPoint v3 ou OpenTimestamps[^opentimestamps].
+## Backend
 
-[^chainpoint]: https://github.com/chainpoint/whitepaper/blob/master/chainpoint_white_paper.pdf
+The backends communicate with the blockchain, broadcast the various transactions (issue / signature of a transaction, issue receipts ...) and manage the associated keys by checking the validity of the signer and his key.
 
-[^opentimestamps]: https://opentimestamps.org
+## How to run the prototype ?
 
-How to run the prototype ?
-----------
+1.  Install Docker[^docker](https://docs.docker.com/engine/installation/#server)  and Docker Compose[^dockercompose](https://docs.docker.com/compose/install/)  (Window 10, macOS, Linux, ...)
+2. Edit environments variables (see below) according to your needs[^dockercomposespec] (https://docs.docker.com/compose/compose-file/)  in the docker-compose-prod.yml 
+3.  Build the set of containers by running `docker-compose -f docker-compose-prod.yml up -d` 
+7.  Access interface at
 
-1. Install Docker[^docker] and Docker Compose[^dockercompose] (Window 10, macOS, Linux, ...)
-2. Install git[^git]
-3. Clone the repository with sub-modules
-``` git clone --recursive https://github.com/Magicking/rc-ge-ch-pdf.git ```
-or
-``` git clone --recursive https://github.com/Magicking/rc-ge-validator.git ```
-3. Place yourself within the directory containing this document
-4. Build the containers using docker-compose
-``` docker-compose build ```
-5. Edit environnements variables (see below) according to your needs[^dockercomposespec] in the docker-compose.yml
-6. Run the prototype
-```docker-compose up```
-7. Access interfaces at 
- - http://127.0.0.1:8001 for the timestamping service
- - http://127.0.0.1:8002 for the validator service
-[^docker]: https://docs.docker.com/engine/installation/#server
+-   [http://127.0.0.1:8001/ctivalidator/](http://127.0.0.1:8001/)  for the timestamping service
 
-[^dockercompose]: https://docs.docker.com/compose/install/
+## How to check node disponibility ?
 
-[^git]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+1.   Access API interface at  [http://127.0.0.1:8001/ctivalidator/api/sonde](http://127.0.0.1:8001/api/sonde)
+## Validator API Environment variables
 
-[^dockercomposespec]: https://docs.docker.com/compose/compose-file/
+Mandatory :
 
-Environment variables
---------------------
+-   WS_URI is a URI pointing to an Ethereum RPC endpoint (e.g:  [http://localhost:8545](http://localhost:8545/)) => The Ethereum node must be fully sync prior to use.
+-   LOCKED_ADDR is an Ethereum address used by the validate service to verify the transaction signer of the receipt (e.g: 0x533a245f03a1a46cacb933a3beef752fd8ff45c3)
+-   TIMEOUT is a UNIX timestamp to manage the expiration time of a private key. To generate one you could use the website [http://www.timestamp.fr/](http://www.timestamp.fr/)
 
- - WS_URI is a URI pointing to an Ethereum RPC endpoint[^RPC] (e.g: http://localhost:8545)
- => The Ethereum node must be fully sync prior to use.
- - LOCKED_ADDR is an Ethereum address used by the validate service to verify the transaction signer of the receipt (e.g: 0x533a245f03a1a46cacb933a3beef752fd8ff45c3)
- - PRIVATE_KEY is an Ethereum private key used by the timestamping service to sign the transaction used to insert the merkle root. (e.g: 18030537dbdd38d0764947d40bed98fc4d2a21af82765a7de7b13d2e4076773c)
- => The account related to the private key must be funded prior to use.
-[^RPC]: https://github.com/ethereum/wiki/wiki/JSON-RPC
+Optional :
 
-Frameworks & softwares
-------------
+-   HTTP(S)_PROXY are environment variables used to specified a forward proxy for connection to pass through.
 
- - [Git](https://git-scm.com)
- - [OpenAPI](https://www.openapis.org/)
- - [Golang](https://golang.org/)
- - [Go-Ethereum](https://geth.ethereum.org/)
- - [Twitter Bootstrap](http://getbootstrap.com/)
- - [Docker](https://www.docker.com/)
- - [ChainPoint](https://chainpoint.org)
- - [Caddy](https://caddyserver.com)
+## Webapp Environment variables
 
-Disclaimer
-----------
-L'État de Genève se décharge de toute responsabilité pour toute utilisation de tout ou partie du code, notamment suite à des défauts de programmation.
+-   KEY_NAME is the name given to the cert & key files used by the Service Provider (e.g:  myservice ). When updated, the names in the *volumes* tag of the *docker-compose-prod.yml* need to be updated too.
+-   IDP_METADATA is the public url where the SAML package gets the Identity Provider metadata.
+-   SP_URL is the root url of the Service Provider
+-   API_HOST is the hostname of the API. It is based on the docker image name.
+-   MAIN_URI is used to specify the required prefix for the webapp. Default is ctivalidator.
+
+## Frameworks & softwares
+
+-   [Git](https://git-scm.com/)
+-   [OpenAPI](https://www.openapis.org/)
+-   [Golang](https://golang.org/)
+-   [Go-Ethereum](https://geth.ethereum.org/)
+-   [Twitter Bootstrap](http://getbootstrap.com/)
+-   [Docker](https://www.docker.com/)
+-   [ChainPoint](https://chainpoint.org/)
+
+## Disclaimer
+
+The State of Geneva disclaims all liability for any use of all or part of the code, in particular due to programming defects.
