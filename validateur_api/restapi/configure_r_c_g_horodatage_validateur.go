@@ -42,6 +42,7 @@ func configureAPI(api *operations.RCGHorodatageValidateurAPI) http.Handler {
 	// s.api.Logger = log.Printf
 
 	ctx := internal.NewCCToContext(context.Background(), ethopts.WsURI)
+	ctx = internal.NewBLKToContext(ctx, ethopts.WsURI)
 	ctx = internal.NewMonitoringToContext(ctx, ethopts.WsURI, ethopts.LockedAddress)
 	api.JSONConsumer = runtime.JSONConsumer()
 
