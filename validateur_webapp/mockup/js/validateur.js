@@ -10,9 +10,15 @@ function successmultiple(files, message, e) {
     $("#msgbox").html(messageValide);
 }
 function errormultiple(files, message, e) {
+    console.log(files, message, e)
     $("#infobox").attr("class", "alert alert-danger");
     $("#iconbox").attr("class", "fa fa-exclamation fa-stack-1x fa-inverse");
-    $("#msgbox").html(messageInvalide);
+    if(message.includes("Invalid number of file") || message.includes("Invalid receipt file") || message.includes("mismatch the file hash")) {
+        $("#msgbox").html(messageInvalide);
+    } else {
+        $("#msgbox").html(messageServerError);
+    }
+
 }
 $(function() {
   myDropzone = new Dropzone("div#validatezone", {
