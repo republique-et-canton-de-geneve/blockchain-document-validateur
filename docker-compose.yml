@@ -19,9 +19,6 @@ services:
     ports:
       - "0.0.0.0:8001:8080"
     environment:
-      - KEY_NAME=myservice # The .cert and .key must have the same name
-      - IDP_METADATA=http://ec2-18-184-234-216.eu-central-1.compute.amazonaws.com/ssorec.geneveid.ch_dgsi_blockchain.xml #Public URL where IdP can be found
-      - SP_URL=http://ec2-18-184-234-216.eu-central-1.compute.amazonaws.com:8001 # URL of the service provider
       - API_HOST=rcgechvalidator:8090 # API host, is equal to the <api container name>:<port>
       - MAIN_URI=ctivalidator
 
