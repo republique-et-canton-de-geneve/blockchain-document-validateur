@@ -47,6 +47,20 @@ Optional :
 
 -   HTTP(S)_PROXY are environment variables used to specified a forward proxy for connection to pass through.
 
+## HTTPS support
+
+HTTPS support is provided via the docker images `jwilder/nginx-proxy`, `jrcs/nginx-proxy-lets-encrypt-companion` and
+[Let's Encrypt](https://letsencrypt.org/). The `nginx-proxy` image faces Internet and dispatches requests to the
+concerned service. Services that are reached from the Internet must have the following environment variables :  
+   
+  - `VIRTUAL_HOST` : The domain name associated to the service.  
+  - `LETSENCRYPT_HOST` : Same value as above, used by Let's Encrypt `certbot` to provide certificates.  
+  - `LETSENCRYPT_EMAIL` : Contact email for LetsEncrypt, used to notice certificate expiration. Note that certificates are automatically renewed while the companion is up.  
+
+Administrators must add an A record to their DNS configuration that points to the IP of the machine that hosts
+`nginx/proxy`. HTTPS should then be available in less than 5 minutes (time for Let'sEncrypt bot to provide certificates). 
+   
+
 ## Webapp Environment variables
 
 -   KEY_NAME is the name given to the cert & key files used by the Service Provider (e.g:  myservice ). When updated, the names in the *volumes* tag of the *docker-compose-prod.yml* need to be updated too.
