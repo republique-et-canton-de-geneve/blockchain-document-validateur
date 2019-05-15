@@ -63,11 +63,14 @@ Administrators must add an A record to their DNS configuration that points to th
 
 ## Webapp Environment variables
 
--   KEY_NAME is the name given to the cert & key files used by the Service Provider (e.g:  myservice ). When updated, the names in the *volumes* tag of the *docker-compose-prod.yml* need to be updated too.
--   IDP_METADATA is the public url where the SAML package gets the Identity Provider metadata.
--   SP_URL is the root url of the Service Provider
--   API_HOST is the hostname of the API. It is based on the docker image name.
--   MAIN_URI is used to specify the required prefix for the webapp. Default is ctivalidator.
+-   `KEY_NAME` is the name given to the cert & key files used by the Service Provider (e.g:  myservice ). When updated, the names in the *volumes* tag of the *docker-compose-prod.yml* need to be updated too.
+-   `IDP_METADATA` is the public url where the SAML package gets the Identity Provider metadata.
+-   `SP_URL` is the root url of the Service Provider
+-   `API_HOST` is the hostname of the API. It is based on the docker image name.
+-   `MAIN_URI` is used to specify the required prefix for the webapp. Default is ctivalidator.
+-   `VIRTUAL_HOST` is used by `nginx-proxy` to identify the domain name associated to the Webapp's Docker.
+-   `LETSENCRYPT_HOST` is used by Let'sEncrypt to provide HTTPS support.
+-   `LETSENCRYPT_EMAIL` is used as contact email for Let'sEncrypt staff to send certifcate expiration notices.
 
 ## Frameworks & softwares
 
