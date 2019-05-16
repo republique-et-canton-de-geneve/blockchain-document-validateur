@@ -47,13 +47,30 @@ Optional :
 
 -   HTTP(S)_PROXY are environment variables used to specified a forward proxy for connection to pass through.
 
+## HTTPS support
+
+HTTPS support is provided via the docker images `jwilder/nginx-proxy`, `jrcs/nginx-proxy-lets-encrypt-companion` and
+[Let's Encrypt](https://letsencrypt.org/). The `nginx-proxy` image faces Internet and dispatches requests to the
+concerned service. Services that are reached from the Internet must have the following environment variables :  
+   
+  - `VIRTUAL_HOST` : The domain name associated to the service.  
+  - `LETSENCRYPT_HOST` : Same value as above, used by Let's Encrypt `certbot` to provide certificates.  
+  - `LETSENCRYPT_EMAIL` : Contact email for LetsEncrypt, used to notice certificate expiration. Note that certificates are automatically renewed while the companion is up.  
+
+Administrators must add an A record to their DNS configuration that points to the IP of the machine that hosts
+`nginx/proxy`. HTTPS should then be available in less than 5 minutes (time for Let'sEncrypt bot to provide certificates). 
+   
+
 ## Webapp Environment variables
 
--   KEY_NAME is the name given to the cert & key files used by the Service Provider (e.g:  myservice ). When updated, the names in the *volumes* tag of the *docker-compose-prod.yml* need to be updated too.
--   IDP_METADATA is the public url where the SAML package gets the Identity Provider metadata.
--   SP_URL is the root url of the Service Provider
--   API_HOST is the hostname of the API. It is based on the docker image name.
--   MAIN_URI is used to specify the required prefix for the webapp. Default is ctivalidator.
+-   `KEY_NAME` is the name given to the cert & key files used by the Service Provider (e.g:  myservice ). When updated, the names in the *volumes* tag of the *docker-compose-prod.yml* need to be updated too.
+-   `IDP_METADATA` is the public url where the SAML package gets the Identity Provider metadata.
+-   `SP_URL` is the root url of the Service Provider
+-   `API_HOST` is the hostname of the API. It is based on the docker image name.
+-   `MAIN_URI` is used to specify the required prefix for the webapp. Default is ctivalidator.
+-   `VIRTUAL_HOST` is used by `nginx-proxy` to identify the domain name associated to the Webapp's Docker.
+-   `LETSENCRYPT_HOST` is used by Let'sEncrypt to provide HTTPS support.
+-   `LETSENCRYPT_EMAIL` is used as contact email for Let'sEncrypt staff to send certifcate expiration notices.
 
 ## Frameworks & softwares
 
