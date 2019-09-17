@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"github.com/gorilla/csrf"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,6 +16,9 @@ type RouteHandler struct {
 
 }
 
+type TokenPayload struct  {
+	Token string	`json:"token"`
+}
 
 /*
 	Reverse Proxy Logic
@@ -77,21 +82,44 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Otherwise serve API if uri == /api/*
 	// Finally redirect if incorrect request
 	if err == nil {
+		w.Header().Set("X-CSRF-Token", csrf.Token(r))
+
 		http.ServeFile(w, r, "mockup/"+string(indexToServe))
 	} else if strings.Split(path, "/")[0] == "api" {
+		w.Header().Set("X-CSRF-Token", csrf.Token(r))
+
 		r.URL.Path = "/"+strings.TrimPrefix(r.URL.Path, "/"+mainURI+"/api/") // Remove api from uri
 
 		apiHost := os.Getenv("API_HOST")
 
 		serveReverseProxy("http://"+apiHost, w, r)
+	}  else if strings.Split(path, "/")[0] == "token" {
+		w.Header().Set("Content-Type", "application/json")
+
+		token := csrf.Token(r)
+		w.Header().Set("X-CSRF-Token", token)
+
+		w.WriteHeader(200)
+
+		payload := TokenPayload{Token:token}
+
+		js, err := json.Marshal(payload)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Write(js)
 	} else {
 		http.Redirect(w, r, "https://www.ge.ch/dossier/geneve-numerique/blockchain", 308)
 	}
 }
 
 func main() {
+	CSRF := csrf.Protect([]byte("32-byte-long-auth-key"), csrf.Secure(false))
+
 	// Main Gateway to Webapp & API, it needs SAML login
-	http.Handle("/", http.HandlerFunc(new(RouteHandler).ServeHTTP))
+	http.Handle("/", http.HandlerFunc(CSRF(new(RouteHandler)).ServeHTTP))
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
