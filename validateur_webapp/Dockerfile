@@ -3,6 +3,7 @@ FROM golang:alpine AS build-env
 ENV GOBIN $GOPATH/bin
 ENV PROJECT_DIR /go/src/github.com/geneva_validateur
 
+ADD vendor ${PROJECT_DIR}/vendor
 ADD main.go ${PROJECT_DIR}/
 ADD mockup ${PROJECT_DIR}/mockup
 
