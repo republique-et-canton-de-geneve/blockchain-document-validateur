@@ -36,9 +36,12 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
   ./configure --with-compat $CONFARGS --add-dynamic-module=$MOREHEADERSDIR && \
   make && make install
 
-FROM jwilder/nginx-proxy:alpine
-# Extract the dynamic module from the builder image
+FROM nginx:alpine
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+# Extract the dynamic module NCHAN from the builder image
 COPY --from=builder /usr/local/nginx/modules/ngx_http_headers_more_filter_module.so /usr/local/nginx/modules/ngx_http_headers_more_filter_module.so
-COPY nginx-prod.conf /etc/nginx/nginx.conf
 
-VOLUME ["/etc/nginx/certs", "/etc/nginx/dhparam"]
+COPY nginx-balancer.conf /etc/nginx/nginx.conf
+EXPOSE 80
+STOPSIGNAL SIGTERM
+CMD ["nginx", "-g", "daemon off;"]

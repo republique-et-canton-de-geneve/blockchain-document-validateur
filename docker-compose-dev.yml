@@ -55,6 +55,7 @@ services:
   nginx.balancer:
     build:
       context: ./nginx
+      dockerfile: Dockerfile-dev
     container_name: nginx.balancer
     links:
       - webapp1
