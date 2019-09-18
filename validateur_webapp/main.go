@@ -68,6 +68,11 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	_, err := ioutil.ReadFile("mockup/"+string(indexToServe))
 
+	w.Header().Set("X-Frame-Options", "DENY")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+	w.Header().Set("Content-Security-Policy", "default-src 'none'; script-src 'unsafe-inline' 'self'; connect-src 'self'; img-src data: *; style-src 'unsafe-inline' *; font-src *;")
+	w.Header().Set("X-XSS-Protection", "1; mode=block")
 	// If indexToServe is a valid file then return the file
 	// Otherwise serve API if uri == /api/*
 	// Finally redirect if incorrect request
