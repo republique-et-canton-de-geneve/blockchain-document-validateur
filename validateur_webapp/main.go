@@ -13,11 +13,10 @@ import (
 )
 
 type RouteHandler struct {
-
 }
 
-type TokenPayload struct  {
-	Token string	`json:"token"`
+type TokenPayload struct {
+	Token string `json:"token"`
 }
 
 /*
@@ -45,7 +44,6 @@ func serveReverseProxy(target string, res http.ResponseWriter, req *http.Request
 func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	mainURI := os.Getenv("MAIN_URI")
 
-
 	path := r.URL.Path[1:]
 
 	if strings.Split(path, "/")[0] != mainURI {
@@ -71,7 +69,7 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		indexToServe = "index.de.html"
 	}
 
-	_, err := ioutil.ReadFile("mockup/"+string(indexToServe))
+	_, err := ioutil.ReadFile("mockup/" + string(indexToServe))
 
 	w.Header().Set("X-Frame-Options", "DENY")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -86,14 +84,18 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		http.ServeFile(w, r, "mockup/"+string(indexToServe))
 	} else if strings.Split(path, "/")[0] == "api" {
-		w.Header().Set("X-CSRF-Token", csrf.Token(r))
+		if (strings.Split(path, "/")[1] == "swagger.json") {
+			w.WriteHeader(404)
+		} else {
+			w.Header().Set("X-CSRF-Token", csrf.Token(r))
 
-		r.URL.Path = "/"+strings.TrimPrefix(r.URL.Path, "/"+mainURI+"/api/") // Remove api from uri
+			r.URL.Path = "/" + strings.TrimPrefix(r.URL.Path, "/"+mainURI+"/api/") // Remove api from uri
 
-		apiHost := os.Getenv("API_HOST")
+			apiHost := os.Getenv("API_HOST")
 
-		serveReverseProxy("http://"+apiHost, w, r)
-	}  else if strings.Split(path, "/")[0] == "token" {
+			serveReverseProxy("http://"+apiHost, w, r)
+		}
+	} else if strings.Split(path, "/")[0] == "token" {
 		w.Header().Set("Content-Type", "application/json")
 
 		token := csrf.Token(r)
@@ -101,7 +103,7 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(200)
 
-		payload := TokenPayload{Token:token}
+		payload := TokenPayload{Token: token}
 
 		js, err := json.Marshal(payload)
 		if err != nil {
@@ -110,6 +112,7 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.Write(js)
+
 	} else {
 		http.Redirect(w, r, "https://www.ge.ch/dossier/geneve-numerique/blockchain", 308)
 	}
