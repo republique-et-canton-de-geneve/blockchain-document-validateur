@@ -23,28 +23,37 @@ services:
       - API_HOST=rcgechvalidator:8090 # API host, is equal to the <api container name>:<port>
       - MAIN_URI=ctivalidator
       - VIRTUAL_HOST=example.com
+      - LETSENCRYPT_HOST=example.com
+      - LETSENCRYPT_EMAIL=foo@example.com
     working_dir: /app
     command: /app/webapp
-    volumes:
-      - "./myservice.cert:/app/myservice.cert"
-      - "./myservice.key:/app/myservice.key"
-
-  squid.forward:
-    image: wernight/squid
-    container_name: squid.forward
 
   # SSL Let's Encrypt config
 
   nginx-proxy:
-    image: jwilder/nginx-proxy
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /path/to/certs/:/etc/nginx/certs:ro # Edit path to the right certs folder, name should be example.com.crt and example.com.key
-      - /etc/nginx/vhost.d
+      - /etc/letsencrypt/live/example.com:/etc/nginx/certs:ro # Edit path to right domain name
       - /usr/share/nginx/html
+      - /etc/nginx/vhost.d
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+
+  nginx-proxy-letsencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - /etc/letsencrypt/live/example.com:/etc/nginx/certs:rw # Edit path to right domain name
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - "FILES_PERMS=600"
+    volumes_from:
+      - nginx-proxy
 
 
 

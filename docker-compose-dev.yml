@@ -53,13 +53,13 @@ services:
       - "./myservice.key:/app/myservice.key"
 
   nginx.balancer:
-    image: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile-dev
     container_name: nginx.balancer
     links:
       - webapp1
       - webapp2
-    volumes:
-      - "./nginx/nginx-balancer.conf:/etc/nginx/nginx.conf"
     ports:
       - "0.0.0.0:8001:8080"
 
