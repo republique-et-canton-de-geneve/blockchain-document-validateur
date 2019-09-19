@@ -6,6 +6,7 @@ package operations
 // Editing this file might prove futile when you re-run the generate command
 
 import (
+	"errors"
 	"net/http"
 
 	middleware "github.com/go-openapi/runtime/middleware"
