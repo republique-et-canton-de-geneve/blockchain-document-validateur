@@ -1,7 +1,7 @@
 version: '2'
 services:
   rcgechvalidator:
-    image: blockchainpartnerhub/geneva_validateur_rcgechvalidator:1.0
+    image: blockchainpartnerhub/geneva_validateur_rcgechvalidator:1.0.1
     environment:
       - TX_HEX=d3851f8ee9bbd79a4cf332999a89a4b2c6b8d5c4c0c001ea85e95ab7997843c0
       - WS_URI=https://rinkeby.infura.io/v3/afeacc980c634655875d915ed65cb0e4 # WS url to connect to the blockchain
@@ -11,7 +11,7 @@ services:
     command: "/app/api --host 0.0.0.0 --port=8090"
 
   webapp:
-    image: blockchainpartnerhub/geneva_validateur_webapp:1.0
+    image: blockchainpartnerhub/geneva_validateur_webapp:1.0.1
     ports:
       - "0.0.0.0:8001:8080"
     environment:
