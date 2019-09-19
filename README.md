@@ -23,6 +23,10 @@ The sending of the extracts and receipts is done via an upload by a user on the 
 
 The backends communicate with the blockchain, broadcast the various transactions (issue / signature of a transaction, issue receipts ...) and manage the associated keys by checking the validity of the signer and his key.
 
+### Warning
+After a security audit it was asked by the Geneva state to make error message more generic. However that implied modifying automatically generated files. 
+If those files are generated once again all changes made to fit the audit will be deleted.
+
 ## How to run the prototype ?
 
 1.  Install Docker[^docker](https://docs.docker.com/engine/installation/#server)  and Docker Compose[^dockercompose](https://docs.docker.com/compose/install/)  (Window 10, macOS, Linux, ...)
