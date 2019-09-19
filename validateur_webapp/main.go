@@ -42,6 +42,11 @@ func serveReverseProxy(target string, res http.ResponseWriter, req *http.Request
 }
 
 func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if(r.Method != http.MethodGet && r.Method != http.MethodPost) {
+		w.WriteHeader(444)
+		return
+	}
+
 	mainURI := os.Getenv("MAIN_URI")
 
 	path := r.URL.Path[1:]
