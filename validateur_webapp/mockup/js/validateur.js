@@ -23,7 +23,6 @@ function errormultiple(files, message, e) {
 }
 
 $(document).ready(function () {
-    console.log("alllloooooo")
     $.get('./token', function (response) {
         localStorage.setItem('csrfToken', response.token);
     });
