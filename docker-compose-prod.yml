@@ -28,9 +28,7 @@ services:
   # SSL Let's Encrypt config
 
   nginx-proxy:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
+    image: blockchainpartnerhub/geneva_nginx_proxy:1.0
     ports:
       - "80:80"
       - "443:443"
