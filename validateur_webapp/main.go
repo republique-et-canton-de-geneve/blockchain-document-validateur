@@ -124,7 +124,7 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	CSRF := csrf.Protect([]byte("32-byte-long-auth-key"), csrf.Secure(false))
+	CSRF := csrf.Protect([]byte("32-byte-long-auth-key"))
 
 	// Main Gateway to Webapp & API, it needs SAML login
 	http.Handle("/", http.HandlerFunc(CSRF(new(RouteHandler)).ServeHTTP))
