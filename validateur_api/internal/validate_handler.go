@@ -155,7 +155,7 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 		//parse the multipart form in the request
 		err := r.ParseMultipartForm(100000)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -176,7 +176,7 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 			file, err := files[i].Open()
 			defer file.Close()
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
 				return
 			}
 
@@ -192,11 +192,11 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 			}
 			h := sha3.New256()
 			if _, err = file.Seek(0, 0); err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
 				return
 			}
 			if _, err = io.Copy(h, file); err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
 				return
 			}
 			hash = h.Sum(nil)
@@ -248,7 +248,7 @@ func ValidateHandler(ctx context.Context, prefix, lockedAddress string, handler 
 			Time:       anchor_date,
 		})
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
 			return
 		}
 	}

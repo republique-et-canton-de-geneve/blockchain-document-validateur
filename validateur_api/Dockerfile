@@ -19,6 +19,8 @@ RUN go build -o api
 
 
 FROM alpine
+# Create a group and user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 RUN apk update \
         && apk upgrade \
@@ -28,5 +30,9 @@ RUN apk update \
 
 WORKDIR /app
 COPY --from=build-env /go/src/github.com/geneva_validateur/cmd/r-c-g-horodatage-validateur-server/api /app/
+
+RUN chown appuser:appgroup -R .
+# Tell docker that all future commands should run as the appuser user
+USER appuser
 
 EXPOSE 8090
