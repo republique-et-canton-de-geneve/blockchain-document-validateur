@@ -46,6 +46,8 @@ Mandatory :
 -   WS_URI is a URI pointing to an Ethereum RPC endpoint (e.g:  [http://localhost:8545](http://localhost:8545/)) => The Ethereum node must be fully sync prior to use.
 -   LOCKED_ADDR is an Ethereum address used by the validate service to verify the transaction signer of the receipt (e.g: 0x533a245f03a1a46cacb933a3beef752fd8ff45c3)
 -   TIMEOUT is a UNIX timestamp to manage the expiration time of a private key. To generate one you could use the website [http://www.timestamp.fr/](http://www.timestamp.fr/)
+-   CSRF_TIME_LIMIT is the longevity of a CSRF Token in seconds. Should at least be 300.
+
 
 Optional :
 
