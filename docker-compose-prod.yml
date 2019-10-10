@@ -11,13 +11,14 @@ services:
     command: "/app/api --host 0.0.0.0 --port=8090"
 
   webapp:
-    image: blockchainpartnerhub/geneva_validateur_webapp:1.0.1
+    image: blockchainpartnerhub/geneva_validateur_webapp:1.0.2
     ports:
       - "0.0.0.0:8001:8080"
     environment:
       - API_HOST=rcgechvalidator:8090 # API host, is equal to the <api container name>:<port>
       - MAIN_URI=ctivalidator
       - VIRTUAL_HOST=example.com
+      - CSRF_TIME_LIMIT=360
     working_dir: /app
     command: /app/webapp
     volumes:

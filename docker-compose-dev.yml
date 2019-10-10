@@ -34,6 +34,7 @@ services:
     environment:
       - API_HOST=rcgechvalidator1:8090 # API host, is equal to the <api container name>:<port>
       - MAIN_URI=ctivalidator
+      - CSRF_TIME_LIMIT=360
     working_dir: /app
     command: /app/webapp
     volumes:
@@ -46,6 +47,7 @@ services:
     environment:
       - API_HOST=rcgechvalidator2:8090 # API host, is equal to the <api container name>:<port>
       - MAIN_URI=ctivalidator
+      - CSRF_TIME_LIMIT=360
     working_dir: /app
     command: /app/webapp
     volumes:

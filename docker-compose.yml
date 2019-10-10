@@ -25,6 +25,7 @@ services:
       - VIRTUAL_HOST=example.com
       - LETSENCRYPT_HOST=example.com
       - LETSENCRYPT_EMAIL=foo@example.com
+      - CSRF_TIME_LIMIT=360
     working_dir: /app
     command: /app/webapp
 
