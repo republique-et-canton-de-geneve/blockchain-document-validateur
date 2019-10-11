@@ -9,6 +9,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -124,7 +125,20 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	CSRF := csrf.Protect([]byte("32-byte-long-auth-key"))
+
+	csrfLimitString := os.Getenv("CSRF_TIME_LIMIT")
+	if csrfLimitString == "" {
+		log.Fatalf("CSRF limit is not specified")
+	}
+	csrfLimit, err := strconv.Atoi(csrfLimitString)
+	if err != nil {
+		log.Fatalf("could not convert CSRF limit to int : %v", err.Error())
+	}
+	if csrfLimit < 5 * 60 {
+		log.Fatalf("CSRF limit should be at least 300 seconds")
+	}
+
+	CSRF := csrf.Protect([]byte("32-byte-long-auth-key"), csrf.MaxAge(csrfLimit))
 
 	// Main Gateway to Webapp & API, it needs SAML login
 	http.Handle("/", http.HandlerFunc(CSRF(new(RouteHandler)).ServeHTTP))
