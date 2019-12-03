@@ -1,4 +1,10 @@
 var endpoint = 'api';
+
+var validateur = angular.module('validateur', []);
+validateur.controller('controller', function($scope) {
+    $scope.informationUrl = informationUrl;
+})
+
 Dropzone.autoDiscover = false;
 var myDropzone;
 

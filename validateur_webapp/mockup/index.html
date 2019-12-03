@@ -2,12 +2,12 @@
 <html lang="fr" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/ dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ og: http://ogp.me/ns# rdfs: http://www.w3.org/2000/01/rdf-schema# sioc: http://rdfs.org/sioc/ns# sioct: http://rdfs.org/sioc/types# skos: http://www.w3.org/2004/02/skos/core# xsd: http://www.w3.org/2001/XMLSchema#" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
 <head>
 	<!--[if IE]><![endif]-->
-	<!-- Desactive le mode compatibilite dans IE. Cette balise doit etre la premiere juste apres le head.  
+	<!-- Desactive le mode compatibilite dans IE. Cette balise doit etre la premiere juste apres le head.
 	source : http://msdn.microsoft.com/fr-fr/library/cc288325%28v=vs.85%29.aspx -->
 	<!--[if IE]>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<![endif]-->
-		
+
 	<!-- META -->
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -30,18 +30,18 @@
 	<meta name="geo.placename" content="Genève" />
 	<meta name="geo.region" content="CH-GE" />
 	<meta name="icbm" content="46.201174, 6.146636" />
-	
+
 	<!-- RELATIONS -->
 	<link rel="profile" href="http://www.w3.org/1999/xhtml/vocab" />
 	<link rel="shortcut icon" href="charte_2016/favicon.ico" type="image/vnd.microsoft.icon" />
 	<link rel="publisher" href="http://www.ge.ch/dgsi/" />
 	<link rel="author" href="http://www.ge.ch/pre/" />
-	
-	<!-- TITRE et DESCRIPTION -->	
+
+	<!-- TITRE et DESCRIPTION -->
 	<meta itemprop="description" content="Charte 2016 template AEL Commun" />
 	<meta name="description" content="Charte 2016 template AEL Commun" />
 	<title>Validateur - République et canton de Genève</title>
-	
+
 	<!-- STYLES -->
 	<link rel="stylesheet" type="text/css" href="charte_2016/css/style.css?ody61c" integrity="sha384-OavKoTfrEtrqjS0acDYt3aVC8bEgGp5yrJci7t9Xv0GLiuAsDY8jmEFGAmXOh5Yy">
 	<link rel="stylesheet" type="text/css" href="charte_2016/css/owl.carousel.css?ody61c" integrity="sha384-QC54TJeACx4uLmhZVYpcXQv+cqycDEaQvSPvM1H7on5Y2zfsFKkY+5vgwalaVvLi">
@@ -71,6 +71,10 @@
 	<script src="charte_2016/js/datepicker-fr.js?ody61c" integrity="sha384-Y7LM97RgIaZI8IlXAHNJED1CD2k6i61ToVqgxfFUKuHm2+//qY8RnSslT7cIfKot"></script>
 	<script src="charte_2016/js/jquery.cookie.js?ody61c" integrity="sha384-PtrWjBX7O24BmSzpJAikrpVVoElcAD65dYjdDqfmwFpAwbetSU9ccvtKKlBo1pvO"></script>
 	<script src="js/dropzone.js?ody61g" integrity="sha384-olRYq7otHxbdd1L9RbfzEhV/U03u1VYZ0rzu0Wzp4Y64nk2ipn5vXn/tiXOTkyc2"></script>
+	<script src="js/fr.js?ody61g" integrity="sha384-jIetqmWjHKKZNY1fp1TMeKaR5NXfvkgDWEQ5c5Gj2aDocrzZe9KjpovTDsiCAc/W"></script>
+	<script src="js/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/"></script>
+	<script src="js/validateur.js" integrity="sha384-oUGRz337mrJBCp1RR0xY64nv307zAmwNKASmaIZAqNy8c+P+nNBaD03jygKn7Pfk"></script>
+	<script src="js/conf.js" integrity="sha384-gVdth8TTmiNXtiw9lR2Ymx1AJTN5c/x4tIcJjzctVddgL46sZNsfU59ffXlCK0NV"></script>
 
 <!--[if gte mso 9]><xml>
 <mso:CustomDocumentProperties>
@@ -81,7 +85,7 @@
 </xml><![endif]-->
 </head>
 
-<body role="document" class="html not-front not-logged-in no-sidebars page-node page-node- node-type-prestation">
+<body ng-app="validateur" ng-controller="controller" role="document" class="html not-front not-logged-in no-sidebars page-node page-node- node-type-prestation">
 	<div id="skip-link">
 		<a href="#main-content" class="element-invisible element-focusable">Aller au contenu principal</a>
 	</div>
@@ -90,7 +94,7 @@
 			height="75px" alt="République et canton de Genève"
 			title="République et canton de Genève">
 	</div>
-	
+
 	<!-- HEADER LIGNE BLANCHE (MODIFICATIONS INTERDITES) -->
 	<header id="navbar" role="banner" class="navbar container navbar-default">
 		<div class="navbar-header row">
@@ -103,7 +107,7 @@
 			</div>
 		</div>
 	</header>
-	
+
 	<!-- NAVIGATION BANDEAU GRIS FONCE -->
 	<div class="highlighted jumbotron">
 		<div class="container">
@@ -115,7 +119,7 @@
 								<div class="navbar-header region-highlighted">
 									<section id="block-block-1" class="block block-block clearfix">
 										<p>
-											<a href="https://demain.ge.ch/demander-extrait-certifie-conforme-au-registre-du-commerce">Plus d'informations</a>
+											<a ng-href="{{informationUrl}}" target="_blank">Plus d'informations</a>
 										</p>
 									</section>
 								</div>
@@ -126,7 +130,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- NAVIGATION BANDEAU GRIS CLAIR -->
 	<div id="navigation">
 		<!-- MENUS -->
@@ -138,7 +142,7 @@
 							<div class="container-fluid">
 								<div class="navbar-header">
 									<h1>
-										Le validateur est un service de l'Etat de Genève
+										Validation de document numérique
 									</h1>
 								</div>
 							</div>
@@ -148,7 +152,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- COEUR DE PAGE -->
 	<div id="page">
 		<div class="main-container">
@@ -161,43 +165,14 @@
 							<div class="col-xs-12">
 									<section id="block-system-main" class="block block-system clearfix">
 										<div class="panel-main">
-<!-- language-switcher-pills -->
-<div class="row">
-    <div class="col-xs-12 text-right">
-        <ul class="nav nav-pills pull-right" role="tablist" id="test-nav-lang-pills">
-            <li role="presentation" class="active"><a href="fr" role="tab">FR</a></li>
-            <li role="presentation"><a href="en" role="tab">EN</a></li>
-            <li role="presentation"><a href="de" role="tab">DE</a></li>
-            <li role="presentation"><a href="it" role="tab">IT</a></li>
-        </ul>
-    </div>
-</div>
-<!-- /language-switcher-pills -->
-<p><strong><u>Le validateur est un service de l&#39;Etat de Gen&egrave;ve</u></strong></p>
 
 <div>
-<p>L&#39;Etat de Gen&egrave;ve exp&eacute;rimente la technologie Blockchain afin d&#39;horodater et de signer les extraits num&eacute;riques. C&#39;est la premi&egrave;re fois en Suisse que cette technologie prometteuse est utilis&eacute;e dans ce contexte, raison pour laquelle la Conf&eacute;d&eacute;ration soutient ce projet dans le cadre des <a href="https://www.egovernment.ch/fr/umsetzung/innovationen/innovations-20172018/">projets d&#39;innovation 2017/2018 d&#39;E-Government Suisse</a>.</p>
-
-<p>Durant cette phase pilote, les extraits n&#39;ont pas de validit&eacute; juridique. L&#39;objectif est de s&#39;inscrire dans le cadre de la mise en &oelig;uvre de <a href="https://www.ejpd.admin.ch/ejpd/fr/home/aktuell/news/2016/2016-09-07.html">l&#39;ordonnance sur l&#39;&eacute;tablissement d&#39;actes authentiques &eacute;lectroniques et les l&eacute;galisations &eacute;lectroniques (OAAE).</a></p>
-
-<p>Cette technologie permet dor&eacute;navant &agrave; l&#39;Etat de Gen&egrave;ve d&#39;horodater et de signer les extraits &eacute;lectroniques. Il est d&egrave;s lors possible pour n&#39;importe qui de v&eacute;rifier qu&#39;un extrait &eacute;lectronique a bien &eacute;t&eacute; d&eacute;livr&eacute; par l&#39;Etat de Gen&egrave;ve gr&acirc;ce &agrave; un service de validation en ligne: <a href="https://blockchain.ge-lab.ch/validation">https://blockchain.ge-lab.ch/validation</a></p>
-
-<p>Vous retrouverez toutes les informations sur cette exp&eacute;rimentation sur ce lien : <a href="https://demain.ge.ch/dossier/geneve-numerique/Blockchain">https://demain.ge.ch/dossier/geneve-numerique/Blockchain</a></p>
-</div>
-
-<p><strong>Comment faire?</strong></p>
+<p>Pour vérifier l'authenticité d'un document électronique délivré par l'Etat de Genève, vous pouvez téléverser l'extrait numérique PDF et le reçu PDF (formule de clôture) simultanément sur ce service de validation des documents.</p>
 
 <ol>
-	<li>Vous pouvez t&eacute;l&eacute;verser l&#39;extrait num&eacute;rique PDF et le re&ccedil;u PDF (formule de cl&ocirc;ture) simultan&eacute;ment sur le service de validation de l&#39;Etat de Gen&egrave;ve : <a href="https://blockchain.ge-lab.ch/validation">https://blockchain.ge-lab.ch/validation</a>
-
-	<ol style="list-style-type:lower-alpha;">
-		<li>Si l&#39;extrait est bien celui que l&#39;Etat de Gen&egrave;ve a d&eacute;livr&eacute;, un message en vert vous l&#39;indique</li>
-		<li>Si ce n&#39;est pas le cas, une alerte en rouge vous informe que l&#39;extrait n&#39;est pas valable</li>
-	</ol>
-	</li>
+	<li>Si l'extrait est bien celui que l'Etat de Genève a délivré, un message en vert vous l'indique</li>
+	<li>Si ce n'est pas le cas, une alerte en rouge vous informe que l'extrait n'est pas valable</li>
 </ol>
-
-<p>Vous pouvez commander des extraits &eacute;lectroniques en ligne &agrave; tout moment: <a href="https://blockchain.ge.ch">https://blockchain.ge.ch</a></p>
 
 <p><em>Les documents t&eacute;l&eacute;charg&eacute;s sur le validateur en vue d&#39;&ecirc;tre v&eacute;rifi&eacute;s ne sont pas enregistr&eacute;s durablement dans le syst&egrave;me. Le contenu et les m&eacute;tadonn&eacute;es des documents valid&eacute;s ne sont pas non plus journalis&eacute;s par le syst&egrave;me.</em></p>
 
@@ -222,15 +197,7 @@
       </div>
    </div>
 </div>
-	<script src="js/fr.js?ody61g" integrity="sha384-jIetqmWjHKKZNY1fp1TMeKaR5NXfvkgDWEQ5c5Gj2aDocrzZe9KjpovTDsiCAc/W"></script>
-	<script src="js/validateur.js?ody6" integrity="sha384-L4e1MKe9aLhrVQR1epQdmUchMr4O8TiDwIk0dMdK937MRlW2Fnp/3dKMTcPBp4Lm"></script>
 										</div>
-<div id="pageBesoinAide">
-      <div class="container">
-            <div> Avez-vous des questions générales sur la validation de documents&nbsp;? Nous sommes à votre disposition. </div>
-            <div><a href=" https://demain.ge.ch/contact-geneve-lab-blockchain" target="_blank"><i aria-hidden="false" class="fa fa-envelope-square fa-lg"><!----></i> Contact </a></div>
-      </div>
-</div>
 									</section>
 								</div>
 							</div>
@@ -240,7 +207,7 @@
 			</section>
 		</div>
 	</div>
-	
+
 	<!-- FOOTER -->
 	<footer class="footer">
 		<!-- FOOTER HAUT GRIS CLAIR -->

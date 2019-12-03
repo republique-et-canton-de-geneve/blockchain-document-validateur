@@ -61,18 +61,8 @@ func (this *RouteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	indexToServe := path
 
-	// Switch to handle different languages
-	switch path {
-	case "":
-		indexToServe = "index.fr.html"
-	case "fr":
-		indexToServe = "index.fr.html"
-	case "en":
-		indexToServe = "index.en.html"
-	case "it":
-		indexToServe = "index.it.html"
-	case "de":
-		indexToServe = "index.de.html"
+  if path == "" {
+		indexToServe = "index.html"
 	}
 
 	_, err := ioutil.ReadFile("mockup/" + string(indexToServe))
